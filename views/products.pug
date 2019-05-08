@@ -1,0 +1,42 @@
+extends layout
+
+block content
+    h1=title
+    form(action=`/products`, method="post")
+        div(class="row")
+            div(class="col-10")
+                input(class="form-control" name="input" type="text" value=`${formInput}`)
+            div(class="col-2")
+                button(class="btn btn-primary"  type="submit") Submit
+    div #{products.length || 'error'}
+    table(class="table table-hover")
+        tbody
+            tr
+                td ID
+                td Name
+                td Category ID
+                td Discount ID
+                td Description
+                td Rating
+                td Vote count
+                td Available
+                td Arrive date
+                td Edit
+            each product in products
+                tr
+                    td #{product.id}
+                    td #{product.name}
+                    td #{product.category_id}
+                    td #{product.discount_id}
+                    td #{product.description}
+                    td #{product.rating}
+                    td #{product.vote_count}
+                    td #{product.available}
+                    td #{product.arrive_date}
+                    //- td #{product.created_at}
+                    //- td #{product.updated_at}
+                    td 
+                        a(href=`/product/${product.id}`) Edit
+block fog
+    include paginator
+    +paginator(total, formInput ? `/products/input=${formInput}&` : '/products/' )

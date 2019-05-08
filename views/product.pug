@@ -1,0 +1,56 @@
+extends layout
+
+block content
+    h1=title 
+    form(action=`/product/${product.id}/edit`, method="post", enctype="multipart/form-data")
+        table(class="table")
+            tbody
+                tr
+                    td
+                        img(src=`http://localhost/file/${product.img_src}` style="height:6rem") 
+                    td
+                        input(type="file", name="image")
+                tr
+                    td id
+                    td
+                        input(class="form-control" type="text", name="id" value=`${product.id}`) 
+                tr
+                    td name
+                    td
+                        input(class="form-control" type="text", name="name" value=`${product.name}`) 
+                tr
+                    td price
+                    td
+                        input(class="form-control" type="text", name="price" value=`${product.price}`) 
+                tr
+                    td category_id
+                    td
+                        input(class="form-control" type="text", name="category_id" value=`${product.category_id}`) 
+                tr
+                    td discount_id
+                    td
+                        input(class="form-control" type="text", name="discount_id" value=`${product.discount_id}`) 
+                        if product.discount
+                            div #{product.discount.id}
+                            div #{product.discount.promo_code}
+                tr
+                    td description
+                    td
+                        input(class="form-control" type="text", name="description" value=`${product.description}`) 
+                tr
+                    td rating
+                    td
+                        input(class="form-control" type="text", name="rating" value=`${product.rating}`) 
+                tr
+                    td vote_count
+                    td
+                        input(class="form-control" type="text", name="vote_count" value=`${product.vote_count}`) 
+                tr
+                    td available
+                    td
+                        input(class="form-control" type="text", name="available" value=`${product.available}`) 
+                tr
+                    td arrive_date
+                    td
+                        input(class="form-control" type="text", name="arrive_date" value=`${product.arrive_date}` disabled) 
+        button(class="btn btn-primary"  type="submit") Submit

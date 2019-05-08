@@ -1,0 +1,19 @@
+extends layout
+
+block content
+    h1=title
+    table(class="table table-hover")
+        tbody
+            tr
+                td ID
+                td Name
+                td Created Date
+            each user in users
+                tr
+                    td #{user.id}
+                    td #{user.name}
+                    td #{user.created_at}
+    //- p Welcome #{JSON.stringify(user)}
+block fog
+    include paginator
+    +paginator(total, `/users/`)
