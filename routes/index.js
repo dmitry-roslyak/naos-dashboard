@@ -1,4 +1,5 @@
 const express = require("express");
+const app = require("../app");
 const productController = require("../controllers/product");
 const userController = require("../controllers/user");
 const orerController = require("../controllers/order");
@@ -7,10 +8,10 @@ var router = express.Router();
 
 /* GET home page. */
 router.use(function (req, res, next) {
-    // res.locals.path = [];
-    // res.locals.path = app.path(); //.split("/");
-    // var t = app.path();
-    // console.log(app);
+    res.locals.breadcrumbs = [];
+    res.locals.breadcrumbs.push({ link: "/", name: "Home" });
+    var name = req.path.split("/")[1];
+    name && res.locals.breadcrumbs.push({ link: req.path, name: name });
     next();
 });
 router.get("/", function (req, res, next) {

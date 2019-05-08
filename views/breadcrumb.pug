@@ -1,0 +1,10 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    each breadcrumb,i in breadcrumbs
+        if i != breadcrumbs.length-1
+            li(class="breadcrumb-item")
+                a(href=`${breadcrumb.link}`) #{breadcrumb.name}
+        else
+            li(class="breadcrumb-item active") #{breadcrumb.name}
+  </ol>
+</nav>
