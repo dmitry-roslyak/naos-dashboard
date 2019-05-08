@@ -10,7 +10,7 @@ module.exports = {
                 res.render("users", {
                     users: users,
                     total: total,
-                    title: "Test"
+                    title: "Users"
                 })
             );
         });

@@ -14,6 +14,6 @@ block content
                     td #{user.name}
                     td #{user.created_at}
     //- p Welcome #{JSON.stringify(user)}
-block fog
+block pagination
     include paginator
     +paginator(total, `/users/`)

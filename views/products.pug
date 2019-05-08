@@ -37,6 +37,6 @@ block content
                     //- td #{product.updated_at}
                     td 
                         a(href=`/product/${product.id}`) Edit
-block fog
+block pagination
     include paginator
     +paginator(total, formInput ? `/products/input=${formInput}&` : '/products/' )

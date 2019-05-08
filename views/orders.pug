@@ -1,0 +1,31 @@
+extends layout
+
+block content
+    h1=title
+    table(class="table table-hover")
+        tbody
+            tr
+                td ID
+                td Customer name
+                td Price
+                td currency_type
+                td deliver_adr
+                td payment_type
+                td payment_state
+                td State
+                td Created Date
+            each order in orders
+                tr
+                    td #{order.id}
+                    td #{order.name}
+                    td #{order.price}
+                    td #{order.currency_type}
+                    td #{order.deliver_adr}
+                    td #{order.payment_type}
+                    td #{order.payment_state}
+                    td #{order.order_state}
+                    td #{order.created_at}
+    //- p Welcome #{JSON.stringify(user)}
+block pagination
+    include paginator
+    +paginator(total, `/orders/`)

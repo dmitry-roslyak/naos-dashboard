@@ -1,6 +1,19 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../core/config-init").sequelize;
 
+const Order = sequelize.define("order", {
+    id: { type: Sequelize.INTEGER, primaryKey: true },
+    name: Sequelize.STRING,
+    price: Sequelize.DOUBLE,
+    currency_type: Sequelize.STRING,
+    deliver_adr: Sequelize.STRING,
+    payment_type: Sequelize.STRING,
+    payment_state: Sequelize.STRING,
+    order_state: Sequelize.STRING,
+    created_at: Sequelize.DATE,
+    updated_at: Sequelize.DATE
+    //   birthday: Sequelize.DATE
+});
 const User = sequelize.define("user", {
     id: { type: Sequelize.INTEGER, primaryKey: true },
     name: Sequelize.STRING,
@@ -42,4 +55,4 @@ const Product = sequelize.define("product", {
 //     .then(jane => {
 //         console.log(jane.toJSON());
 //     });
-module.exports = { Product, Discount, User };
+module.exports = { Product, Discount, User, Order };
