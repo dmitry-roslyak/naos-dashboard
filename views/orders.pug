@@ -3,17 +3,18 @@ extends layout
 block content
     h1=title
     table(class="table table-hover")
-        tbody
+        thead
             tr
-                td ID
-                td Customer name
-                td Price
-                td currency_type
-                td deliver_adr
-                td payment_type
-                td payment_state
-                td State
-                td Created Date
+                th ID
+                th Customer name
+                th Price
+                th currency_type
+                th deliver_adr
+                th payment_type
+                th payment_state
+                th State
+                th Created Date
+        tbody
             each order in orders
                 tr
                     td #{order.id}

@@ -1,0 +1,23 @@
+extends layout
+
+block content
+    h1=title
+    table(class="table table-hover")
+        thead
+            tr
+                th id
+                th promo_code
+                th discount
+                th begin_at
+                th end_at
+        tbody
+            each discount in discounts
+                tr
+                    td #{discount.id}
+                    td #{discount.promo_code}
+                    td #{discount.discount}
+                    td #{discount.begin_at}
+                    td #{discount.end_at}
+//- block pagination
+//-     include paginator
+//-     +paginator(total, `/discounts/`)

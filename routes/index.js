@@ -3,7 +3,6 @@ const app = require("../app");
 const productController = require("../controllers/product");
 const userController = require("../controllers/user");
 const orerController = require("../controllers/order");
-
 var router = express.Router();
 
 /* GET home page. */
@@ -23,6 +22,10 @@ router.all("*offset=:offset&limit=:limit", function (req, res, next) {
     next();
 });
 
+router.get(
+    "/discounts",
+    productController.discountAll
+);
 router.get(
     "/orders(/*)?",
     orerController.findAll

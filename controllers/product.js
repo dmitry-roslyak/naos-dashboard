@@ -9,6 +9,11 @@ const imageUpload = require("../core/naos_api");
 Product.belongsTo(Discount);
 
 module.exports = {
+    discountAll: function (req, res, next) {
+        Discount.findAll().then(discounts => {
+            res.render("discounts", { discounts: discounts });
+        });
+    },
     findById: function (req, res, next) {
         Product.findAll({
             where: {
@@ -16,7 +21,9 @@ module.exports = {
             },
             include: [Discount]
         }).then(product => {
-            res.render("product", { product: product[0] });
+            Discount.findAll().then(discounts => {
+                res.render("product", { product: product[0], discounts: discounts });
+            });
         });
     },
     edit: function (req, res, next) {

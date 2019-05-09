@@ -25,14 +25,21 @@ block content
                 tr
                     td category_id
                     td
-                        input(class="form-control form-control-sm" type="text", name="category_id" value=`${product.category_id}`) 
+                        input(class="form-control form-control-sm" type="text" name="category_id" value=`${product.category_id}`) 
                 tr
                     td discount_id
-                    td
-                        input(class="form-control form-control-sm" type="text", name="discount_id" value=`${product.discount_id}`) 
-                        if product.discount
-                            div #{product.discount.id}
-                            div #{product.discount.promo_code}
+                    td(class="row")
+                        div(class="col-3")
+                            input(class="form-control form-control-sm" type="text" value=`${product.discount_id}` disabled) 
+                        div(class="col-9")
+                            <select class="custom-select custom-select-sm" name="discount_id">
+                                <option value="0">None</option>
+                                each discount in discounts
+                                    if product.discount_id == discount.id
+                                        option(value=discount.id selected) #{JSON.stringify(discount)}
+                                    else 
+                                        option(value=discount.id) #{JSON.stringify(discount)}
+                            </select>
                 tr
                     td description
                     td

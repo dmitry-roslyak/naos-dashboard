@@ -3,11 +3,12 @@ extends layout
 block content
     h1=title
     table(class="table table-hover")
-        tbody
+        thead
             tr
-                td ID
-                td Name
-                td Created Date
+                th ID
+                th Name
+                th Created Date
+        tbody
             each user in users
                 tr
                     td #{user.id}

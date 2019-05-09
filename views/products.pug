@@ -3,31 +3,34 @@ extends layout
 block content
     h1=title
     form(action=`/products`, method="post")
-        div(class="row")
-            div(class="col-10")
-                input(class="form-control" name="input" type="text" value=`${formInput}`)
-            div(class="col-2")
-                button(class="btn btn-primary"  type="submit") Submit
+        <div class="input-group mb-3">
+            input(name="input" type="text" class="form-control" value=`${formInput}` placeholder="" aria-label="Search" aria-describedby="button-addon1")
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit" id="button-addon1">Search</button>
+            </div>
+        </div>
     div #{products.length || 'error'}
     table(class="table table-hover")
-        tbody
+        thead
             tr
-                td ID
-                td Name
-                td Category ID
-                td Discount ID
-                td Description
-                td Rating
-                td Vote count
-                td Available
-                td Arrive date
-                td Edit
+                th ID
+                th Name
+                th Category ID
+                th Discount ID
+                th Description
+                th Rating
+                th Vote count
+                th Available
+                th Arrive date
+                th Edit
+        tbody
             each product in products
                 tr
                     td #{product.id}
                     td #{product.name}
                     td #{product.category_id}
-                    td #{product.discount_id}
+                    td 
+                        a(href=`/discount/${product.discount_id}`) #{product.discount_id}
                     td #{product.description}
                     td #{product.rating}
                     td #{product.vote_count}
