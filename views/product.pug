@@ -2,36 +2,49 @@ extends layout
 
 block content
     h1=title 
-    form(action=`/product/${product.id}/edit`, method="post", enctype="multipart/form-data")
+    //- button(class="btn btn-primary mb-3" id="preview") Preview
+    //-     iframe(src=`http://localhost/#/detail/${product.id}`, frameborder="0" style="width:53.4rem;height: 30rem")
+    form(action=`/product${product.id ? `/${product.id}/edit` : "Create" }`, method="post", enctype="multipart/form-data")
         table(class="table")
             tbody
                 tr
                     td
-                        img(src=`http://localhost/file/${product.img_src}` style="height:6rem") 
+                        if product.id 
+                            img(src=`http://localhost/file/${product.img_src}` style="height:6rem") 
                     td
                         input(type="file", name="image")
-                tr
-                    td id
-                    td
-                        input(class="form-control form-control-sm" type="text", name="id" value=`${product.id}`) 
+                if product.id 
+                    tr
+                        td id
+                        td
+                            input(class="form-control form-control-sm" type="text", name="id" value=`${product.id}`) 
                 tr
                     td name
                     td
-                        input(class="form-control form-control-sm" type="text", name="name" value=`${product.name}`) 
+                        input(class="form-control form-control-sm" type="text", name="name" value=product.name) 
                 tr
                     td price
                     td
-                        input(class="form-control form-control-sm" type="text", name="price" value=`${product.price}`) 
+                        input(class="form-control form-control-sm" type="text", name="price" value=product.price) 
                 tr
                     td category_id
-                    td
-                        input(class="form-control form-control-sm" type="text" name="category_id" value=`${product.category_id}`) 
+                    td(class="row")
+                        div(class="col-2")
+                            input(class="form-control form-control-sm" type="text" value=product.category_id disabled) 
+                        div(class="col-10")
+                            <select class="custom-select custom-select-sm" name="category_id">
+                                each category in categories
+                                    if product.category_id == category.id
+                                        option(value=category.id selected) #{JSON.stringify(category)}
+                                    else 
+                                        option(value=category.id) #{JSON.stringify(category)}
+                            </select>
                 tr
                     td discount_id
                     td(class="row")
-                        div(class="col-3")
-                            input(class="form-control form-control-sm" type="text" value=`${product.discount_id}` disabled) 
-                        div(class="col-9")
+                        div(class="col-2")
+                            input(class="form-control form-control-sm" type="text" value=product.discount_id disabled) 
+                        div(class="col-10")
                             <select class="custom-select custom-select-sm" name="discount_id">
                                 <option value="0">None</option>
                                 each discount in discounts
@@ -43,21 +56,31 @@ block content
                 tr
                     td description
                     td
-                        input(class="form-control form-control-sm" type="text", name="description" value=`${product.description}`) 
+                        textarea(class="form-control form-control-sm" rows="3" type="text", name="description") #{product.description}
                 tr
                     td rating
                     td
-                        input(class="form-control form-control-sm" type="text", name="rating" value=`${product.rating}`) 
+                        input(class="form-control form-control-sm" type="text", name="rating" value=product.rating) 
                 tr
                     td vote_count
                     td
-                        input(class="form-control form-control-sm" type="text", name="vote_count" value=`${product.vote_count}`) 
+                        input(class="form-control form-control-sm" type="text", name="vote_count" value=product.vote_count) 
                 tr
                     td available
                     td
-                        input(class="form-control form-control-sm" type="text", name="available" value=`${product.available}`) 
+                        input(class="form-control form-control-sm" type="text", name="available" value=product.available) 
+                tr
+                    td is_visible
+                    td
+                        input(type="checkbox", name="is_visible" value="true" class="form-control form-control-sm" checked=!!product.is_visible) 
+                        input(type="hidden", name="is_visible" value="false") 
+                tr
+                    td is_bestseller
+                    td
+                        input(type="checkbox", name="is_bestseller" value="true" class="form-control form-control-sm" checked=!!product.is_bestseller) 
+                        input(type="hidden", name="is_bestseller" value="false") 
                 tr
                     td arrive_date
                     td
-                        input(class="form-control form-control-sm" type="text", name="arrive_date" value=`${product.arrive_date}` disabled) 
-        button(class="btn btn-primary"  type="submit") Submit
+                        input(class="form-control form-control-sm" type="date", name="arrive_date" value=(product.id?new Date(product.arrive_date):new Date()).toISOString().substring(0, 10)) 
+        button(class="btn btn-primary my-3"  type="submit") #{product.id ? "Update" : "Create" }

@@ -1,32 +1,61 @@
 const Product = require("../core/models").Product;
+// const Spec = require("../core/models").Spec;
 const Discount = require("../core/models").Discount;
+const Category = require("../core/models").Category;
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 const multiparty = require("multiparty");
 const imageUpload = require("../core/naos_api");
 
-// Product.hasOne(Discount, { foreignKey: "id", primaryKey: "discount_id" });
 Product.belongsTo(Discount);
+// Product.hasMany(Spec, { foreignKey: "prod_id", primaryKey: "id" });
 
-module.exports = {
-    discountAll: function (req, res, next) {
-        Discount.findAll().then(discounts => {
-            res.render("discounts", { discounts: discounts });
+const Controller = {
+    create: function (req, res, next) {
+        Controller.showOne(req, res, next, {
+            rating: 0,
+            vote_count: 0,
+            is_visible: true,
         });
     },
-    findById: function (req, res, next) {
-        Product.findAll({
-            where: {
-                id: req.params.id
-            },
+    showOne: function (req, res, next, product = null) {
+        let p0 = [];
+        p0.push(product || Product.findByPk(req.params.id, {
             include: [Discount]
-        }).then(product => {
-            Discount.findAll().then(discounts => {
-                res.render("product", { product: product[0], discounts: discounts });
+        }));
+        p0.push(Discount.findAll());
+        p0.push(Category.findAll());
+        // p0.push(Spec.findAll({
+        //     attributes: ['name'],
+        //     group: ['name'],
+        //     raw: true
+        // }));
+        Promise.all(p0).then(([product, discounts, categories]) => {
+            // let p1 = [];
+            // results[3].forEach(function (n) {
+            //     p1.push(Spec.findAll({
+            //         where: { name: n.name },
+            //         // attributes: [[Sequelize.literal('DISTINCT `value`'), 'value']],
+            //         attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('value')), 'value'], 'val_type'],
+            //         raw: true
+            //     }))
+            // });
+            // Promise.all(p1).then(function (params) {
+            //     let spec_values = {};
+            //     results[3].forEach(function (n, i) {
+            //         spec_values[n.name] = params[i];
+            //     })
+            res.render("product", {
+                product: product,
+                discounts: discounts,
+                categories: categories,
+                // spec_names: results[3],
+                // spec_values: spec_values
             });
+            // })
         });
     },
-    edit: function (req, res, next) {
+    updateOrCreate: function (req, res, next) {
         var form = new multiparty.Form();
         form.parse(req, function (err, fields, files) {
             let imageUploadPromise;
@@ -44,25 +73,24 @@ module.exports = {
                 imageUploadPromise.then(function (fileName) {
                     fields.img_src = fileName;
                     console.log(fileName);
-                    update();
+                    updateOrCreate();
                 }).catch(function (error) {
                     console.error(error);
                 })
-            } else update();
-            function update() {
-                Product.findByPk(fields.id).then(product => {
-                    product.update(fields).then(function () {
+            } else updateOrCreate();
+            function updateOrCreate() {
+                let product = fields.id ? Product.update(fields, { where: { id: fields.id } }) : Product.create(fields);
+                product.then(function (product) {
+                    if (fields.id) {
                         console.log(`Product (id: ${fields.id}) updated`);
                         res.redirect(".");
-                    })
-                });
+                    } else {
+                        console.log(`Product created`);
+                        res.redirect("/product/" + product.id);
+                    }
+                })
             }
         });
-    },
-    paginator: function (req, res, next) {
-        res.locals.offset = +req.params.offset || null;
-        res.locals.limit = +req.params.limit || 30;
-        next();
     },
     find: function (req, res, next) {
         let input =
@@ -93,3 +121,5 @@ module.exports = {
         });
     }
 };
+
+module.exports = Controller;

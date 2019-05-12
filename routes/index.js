@@ -1,5 +1,5 @@
 const express = require("express");
-const app = require("../app");
+const discountController = require("../controllers/general");
 const productController = require("../controllers/product");
 const userController = require("../controllers/user");
 const orerController = require("../controllers/order");
@@ -24,7 +24,7 @@ router.all("*offset=:offset&limit=:limit", function (req, res, next) {
 
 router.get(
     "/discounts",
-    productController.discountAll
+    discountController.discountAll
 );
 router.get(
     "/orders(/*)?",
@@ -38,14 +38,15 @@ router.get(
 );
 router.get("/user/:id", userController.findById);
 
-router.get("/product/:id", productController.findById);
-
 router.all(
     "/products/?(input=:input)?(&|*)?",
     // "/products/?(input=:input)?&?(offset=:offset&limit=:limit)?",
     // productController.paginator,
     productController.find
 );
-router.post("/product/:id/edit", productController.edit);
+router.get("/product/:id", productController.showOne);
+router.get("/productCreate", productController.create);
+router.post("/productCreate", productController.updateOrCreate);
+router.post("/product/:id/edit", productController.updateOrCreate);
 
 module.exports = router;
