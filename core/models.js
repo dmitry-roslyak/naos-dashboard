@@ -2,7 +2,6 @@ const Sequelize = require("sequelize");
 const sequelize = require("../core/config-init").sequelize;
 
 const Category = sequelize.define("category", {
-    id: { type: Sequelize.INTEGER, primaryKey: true },
     name: Sequelize.STRING
 });
 const Order = sequelize.define("order", {
