@@ -1,5 +1,5 @@
 const express = require("express");
-const discountController = require("../controllers/general");
+const discountController = require("../controllers/discount");
 const categoriesController = require("../controllers/general");
 const productController = require("../controllers/product");
 const userController = require("../controllers/user");
@@ -24,12 +24,13 @@ router.all("*offset=:offset&limit=:limit", function (req, res, next) {
 });
 
 router.get("/categories", categoriesController.showCategories);
-router.post("/createCategory", categoriesController.createCategory);
+router.post("/categoryCreate", categoriesController.createCategory);
 
-router.get(
-    "/discounts",
-    discountController.showDiscounts
-);
+router.get("/discounts", discountController.show);
+router.get("/discount/:id", discountController.showOne);
+router.post("/discount/:id/edit", discountController.edit);
+router.post("/discountCreate", discountController.create);
+
 router.get(
     "/orders(/*)?",
     orerController.findAll

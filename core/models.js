@@ -24,7 +24,6 @@ const User = sequelize.define("user", {
     //   birthday: Sequelize.DATE
 });
 const Discount = sequelize.define("discount", {
-    id: { type: Sequelize.INTEGER, primaryKey: true },
     promo_code: Sequelize.STRING,
     discount: Sequelize.INTEGER,
     begin_at: Sequelize.DATE,

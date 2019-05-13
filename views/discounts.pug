@@ -2,22 +2,38 @@ extends layout
 
 block content
     h1=title
-    table(class="table table-hover")
-        thead
-            tr
-                th id
-                th promo_code
-                th discount
-                th begin_at
-                th end_at
-        tbody
-            each discount in discounts
+    form(action="/discountCreate" method="post")
+        table(class="table table-hover")
+            thead
                 tr
-                    td #{discount.id}
-                    td #{discount.promo_code}
-                    td #{discount.discount}
-                    td #{discount.begin_at}
-                    td #{discount.end_at}
+                    th id
+                    th promo_code
+                    th discount
+                    th begin_at
+                    th end_at
+                    th action
+            tbody
+                each discount in discounts
+                    tr
+                        td #{discount.id}
+                        td #{discount.promo_code}
+                        td #{discount.discount}
+                        td #{discount.begin_at}
+                        td #{discount.end_at}
+                        td 
+                            a(href=`/discount/${discount.id}`) Edit
+                tr
+                    td
+                    td
+                        input(class="form-control form-control-sm" type="text", name="promo_code") 
+                    td
+                        input(class="form-control form-control-sm" type="number", name="discount") 
+                    td
+                        input(class="form-control form-control-sm" type="datetime-local", name="begin_at" value= new Date().toISOString().substring(0, 10)) 
+                    td
+                        input(class="form-control form-control-sm" type="datetime-local", name="end_at" value= new Date().toISOString().substring(0, 10)) 
+                    td 
+                        button(class="btn btn-primary btn-sm"  type="submit") Create
 //- block pagination
 //-     include paginator
 //-     +paginator(total, `/discounts/`)
