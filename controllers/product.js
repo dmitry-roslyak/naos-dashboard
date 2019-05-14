@@ -1,5 +1,5 @@
 const Product = require("../core/models").Product;
-// const Spec = require("../core/models").Spec;
+const Spec = require("../core/models").Spec;
 const Discount = require("../core/models").Discount;
 const Category = require("../core/models").Category;
 const Sequelize = require("sequelize");
@@ -8,7 +8,7 @@ const multiparty = require("multiparty");
 const imageUpload = require("../core/naos_api");
 
 Product.belongsTo(Discount);
-// Product.hasMany(Spec, { foreignKey: "prod_id", primaryKey: "id" });
+Product.hasMany(Spec, { foreignKey: "prod_id", primaryKey: "id" });
 
 const Controller = {
     create: function (req, res, next) {
@@ -21,38 +21,38 @@ const Controller = {
     showOne: function (req, res, next, product = null) {
         let p0 = [];
         p0.push(product || Product.findByPk(req.params.id, {
-            include: [Discount]
+            include: [Discount, Spec]
         }));
         p0.push(Discount.findAll());
         p0.push(Category.findAll());
-        // p0.push(Spec.findAll({
-        //     attributes: ['name'],
-        //     group: ['name'],
-        //     raw: true
-        // }));
-        Promise.all(p0).then(([product, discounts, categories]) => {
-            // let p1 = [];
-            // results[3].forEach(function (n) {
-            //     p1.push(Spec.findAll({
-            //         where: { name: n.name },
-            //         // attributes: [[Sequelize.literal('DISTINCT `value`'), 'value']],
-            //         attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('value')), 'value'], 'val_type'],
-            //         raw: true
-            //     }))
-            // });
-            // Promise.all(p1).then(function (params) {
-            //     let spec_values = {};
-            //     results[3].forEach(function (n, i) {
-            //         spec_values[n.name] = params[i];
-            //     })
-            res.render("product", {
-                product: product,
-                discounts: discounts,
-                categories: categories,
-                // spec_names: results[3],
-                // spec_values: spec_values
+        p0.push(Spec.findAll({
+            attributes: ['name'],
+            group: ['name'],
+            raw: true
+        }));
+        Promise.all(p0).then(([product, discounts, categories, spec_names]) => {
+            let p1 = [];
+            spec_names.forEach(function (n) {
+                p1.push(Spec.findAll({
+                    where: { name: n.name },
+                    // attributes: [[Sequelize.literal('DISTINCT `value`'), 'value']],
+                    attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('value')), 'value'], 'val_type'],
+                    raw: true
+                }))
             });
-            // })
+            Promise.all(p1).then(function (params) {
+                let spec_values = {};
+                spec_names.forEach(function (n, i) {
+                    spec_values[n.name] = params[i];
+                })
+                res.render("product", {
+                    product: product,
+                    discounts: discounts,
+                    categories: categories,
+                    spec_names: spec_names,
+                    spec_values: spec_values
+                });
+            })
         });
     },
     updateOrCreate: function (req, res, next) {
@@ -64,10 +64,6 @@ const Controller = {
                     imageUploadPromise = file.size && imageUpload(file);
                 });
             });
-            if (err) {
-                console.error(err);
-                return;
-            }
             Object.keys(fields).forEach(name => fields[name] = fields[name][0]);
             if (imageUploadPromise) {
                 imageUploadPromise.then(function (fileName) {

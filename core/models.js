@@ -1,6 +1,13 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../core/config-init").sequelize;
 
+const Spec = sequelize.define("spec", {
+    id: { type: Sequelize.INTEGER, primaryKey: true },
+    prod_id: { type: Sequelize.INTEGER, unsigned: true },
+    name: Sequelize.STRING,
+    value: Sequelize.STRING,
+    val_type: Sequelize.STRING,
+});
 const Category = sequelize.define("category", {
     name: Sequelize.STRING
 });
@@ -58,4 +65,4 @@ const Product = sequelize.define("product", {
 //     .then(jane => {
 //         console.log(jane.toJSON());
 //     });
-module.exports = { Product, Discount, User, Order, Category };
+module.exports = { Product, Discount, User, Order, Category, Spec };

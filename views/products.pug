@@ -29,8 +29,7 @@ block content
                     td #{product.id}
                     td #{product.name}
                     td #{product.category_id}
-                    td 
-                        a(href=`/discount/${product.discount_id}`) #{product.discount_id}
+                    td #{product.discount_id}
                     td #{product.description}
                     td #{product.rating}
                     td #{product.vote_count}
@@ -38,6 +37,8 @@ block content
                     td #{product.arrive_date}
                     //- td #{product.created_at}
                     //- td #{product.updated_at}
+                    //- td 
+                    //-     include productSpecs
                     td 
                         a(href=`/product/${product.id}`) Edit
 block pagination

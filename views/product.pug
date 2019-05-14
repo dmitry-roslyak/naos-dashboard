@@ -12,27 +12,32 @@ block content
                         if product.id 
                             img(src=`http://localhost/file/${product.img_src}` style="height:6rem") 
                     td
-                        input(type="file", name="image")
+                        input(type="file" name="image")
                 if product.id 
                     tr
-                        td id
                         td
-                            input(class="form-control form-control-sm" type="text", name="id" value=`${product.id}`) 
+                            label(for="id") id
+                        td
+                            input(class="form-control form-control-sm" type="text" id="name" value=product.id disabled)
+                            input(type="hidden" name="id" value=product.id) 
                 tr
-                    td name
                     td
-                        input(class="form-control form-control-sm" type="text", name="name" value=product.name) 
-                tr
-                    td price
+                        label(for="name") name
                     td
-                        input(class="form-control form-control-sm" type="text", name="price" value=product.price) 
+                        input(class="form-control form-control-sm" type="text" id="name" name="name" value=product.name) 
                 tr
-                    td category_id
+                    td
+                        label(for="price") price
+                    td
+                        input(class="form-control form-control-sm" type="text" id="price" name="price" value=product.price) 
+                tr
+                    td 
+                        label(for="category_id") category_id
                     td(class="row")
                         div(class="col-2")
                             input(class="form-control form-control-sm" type="text" value=product.category_id disabled) 
                         div(class="col-10")
-                            <select class="custom-select custom-select-sm" name="category_id">
+                            <select class="custom-select custom-select-sm" id="category_id" name="category_id">
                                 each category in categories
                                     if product.category_id == category.id
                                         option(value=category.id selected) #{JSON.stringify(category)}
@@ -40,12 +45,13 @@ block content
                                         option(value=category.id) #{JSON.stringify(category)}
                             </select>
                 tr
-                    td discount_id
+                    td
+                        label(for="discount_id") discount_id
                     td(class="row")
                         div(class="col-2")
                             input(class="form-control form-control-sm" type="text" value=product.discount_id disabled) 
                         div(class="col-10")
-                            <select class="custom-select custom-select-sm" name="discount_id">
+                            <select class="custom-select custom-select-sm" id="discount_id" name="discount_id">
                                 <option value="0">None</option>
                                 each discount in discounts
                                     if product.discount_id == discount.id
@@ -54,33 +60,49 @@ block content
                                         option(value=discount.id) #{JSON.stringify(discount)}
                             </select>
                 tr
-                    td description
                     td
-                        textarea(class="form-control form-control-sm" rows="3" type="text", name="description") #{product.description}
+                        label(for="description") description
+                    td
+                        textarea(class="form-control form-control-sm" rows="3" type="text" id="description" name="description") #{product.description}
                 tr
-                    td rating
+                    td 
+                        label(for="rating") rating
                     td
-                        input(class="form-control form-control-sm" type="text", name="rating" value=product.rating) 
+                        input(class="form-control form-control-sm" type="text" id="rating" name="rating" value=product.rating) 
                 tr
-                    td vote_count
+                    td 
+                        label(for="vote_count") vote_count
                     td
-                        input(class="form-control form-control-sm" type="text", name="vote_count" value=product.vote_count) 
+                        input(class="form-control form-control-sm" type="text" id="vote_count" name="vote_count" value=product.vote_count) 
                 tr
-                    td available
+                    td 
+                        label(for="available") available
                     td
-                        input(class="form-control form-control-sm" type="text", name="available" value=product.available) 
+                        input(class="form-control form-control-sm" type="text" id="available" name="available" value=product.available) 
                 tr
-                    td is_visible
+                    td 
+                        label(for="is_visible") is_visible
                     td
-                        input(type="checkbox", name="is_visible" value="true" class="form-control form-control-sm" checked=!!product.is_visible) 
-                        input(type="hidden", name="is_visible" value="false") 
+                        input(type="checkbox" id="is_visible" name="is_visible" value="true" class="form-control form-control-sm" checked=!!product.is_visible) 
+                        input(type="hidden" name="is_visible" value="false") 
                 tr
-                    td is_bestseller
+                    td 
+                        label(for="is_bestseller") is_bestseller
                     td
-                        input(type="checkbox", name="is_bestseller" value="true" class="form-control form-control-sm" checked=!!product.is_bestseller) 
-                        input(type="hidden", name="is_bestseller" value="false") 
+                        input(type="checkbox" id="is_bestseller" name="is_bestseller" value="true" class="form-control form-control-sm" checked=!!product.is_bestseller) 
+                        input(type="hidden" name="is_bestseller" value="false") 
                 tr
-                    td arrive_date
+                    td 
+                        label(for="arrive_date") arrive_date
                     td
-                        input(class="form-control form-control-sm" type="date", name="arrive_date" value=(product.id?new Date(product.arrive_date):new Date()).toISOString().substring(0, 10)) 
+                        input(class="form-control form-control-sm" type="date" id="arrive_date" name="arrive_date" value=(product.id?new Date(product.arrive_date):new Date()).toISOString().substring(0, 10)) 
+        <p>
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"> View specifications
+            </button>
+        </p>
+        <div class="collapse" id="collapseExample">
+            <div class="card card-body">
+                include productSpecs
+            </div>
+        </div>
         button(class="btn btn-primary my-3"  type="submit") #{product.id ? "Update" : "Create" }

@@ -1,0 +1,36 @@
+div
+    h1=title 
+    table(class="table table-hover")
+        thead
+            tr
+                th id
+                th name
+                th value
+                th val_type
+        tbody
+            if product.specs
+                each spec in product.specs
+                    tr
+                        td #{spec.id}
+                        td #{spec.name}
+                        td
+                            <select class="custom-select custom-select-sm" name="discount_id" disabled>
+                                each s in spec_values[spec.name]
+                                    if s.value == spec.value
+                                        option(value=s.value selected) #{s.value}
+                                    else 
+                                        option(value=s.value) #{s.value}
+                            </select>
+                        td #{spec.val_type}
+            else
+                each s in spec_names
+                    tr
+                        td
+                        td #{s.name}
+                        td
+                            <select class="custom-select custom-select-sm" name="discount_id">
+                                option(value=null) Select value
+                                each s1 in spec_values[s.name]
+                                    option(value=s1.value) #{s1.value}
+                            </select>
+                        td 
