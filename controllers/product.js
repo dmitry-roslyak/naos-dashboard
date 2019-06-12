@@ -5,7 +5,7 @@ const Category = require("../core/models").Category;
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 const multiparty = require("multiparty");
-const imageUpload = require("../core/naos_api");
+const imageUpload = require("../core/naos_api").imageUpload;
 
 Product.belongsTo(Discount);
 Product.hasMany(Spec, { foreignKey: "prod_id", primaryKey: "id" });

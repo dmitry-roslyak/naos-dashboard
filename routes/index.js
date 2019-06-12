@@ -4,15 +4,26 @@ const categoriesController = require("../controllers/general");
 const productController = require("../controllers/product");
 const userController = require("../controllers/user");
 const orerController = require("../controllers/order");
-var router = express.Router();
+// const request = require("request");
+const api_tokenVerify = require("../core/naos_api").api_tokenVerify;
 
+var router = express.Router();
 /* GET home page. */
 router.use(function (req, res, next) {
     res.locals.breadcrumbs = [];
     res.locals.breadcrumbs.push({ link: "/", name: "Home" });
     var name = req.path.split("/")[1];
     name && res.locals.breadcrumbs.push({ link: req.path, name: name });
-    next();
+
+    if (req.session.auth) next();
+    else api_tokenVerify(null, req, res).then(() => {
+        next();
+    }).catch(error => next(error))
+});
+router.post("/token", function (req, res, next) {
+    api_tokenVerify(req.body.token, req, res).then(function () {
+        res.redirect('/');
+    }).catch(error => next(error))
 });
 router.get("/", function (req, res, next) {
     res.render("index", { title: "Naos dashboard" });
