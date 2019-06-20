@@ -1,5 +1,6 @@
 /config
 /.vscode
+/dist
 
 # Logs
 logs
