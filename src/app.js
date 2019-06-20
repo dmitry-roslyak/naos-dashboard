@@ -6,8 +6,8 @@ var logger = require("morgan");
 var session = require('express-session');
 const uuidv4 = require('uuid/v4');
 
-var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
+import indexRouter from "./routes/index";
+// var usersRouter = require("./routes/users");
 require("./core/config-init");
 
 var app = express();

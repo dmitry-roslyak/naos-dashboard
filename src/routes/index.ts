@@ -1,15 +1,15 @@
-const express = require("express");
-const discountController = require("../controllers/discount");
-const categoriesController = require("../controllers/general");
-const productController = require("../controllers/product");
-const userController = require("../controllers/user");
-const orerController = require("../controllers/order");
-// const request = require("request");
+import { NextFunction, Response, Request, Router } from "express";
+import { userController } from "../controllers/user";
+import { orderController } from "../controllers/order";
+import { discountController } from "../controllers/discount";
+import { productController } from "../controllers/product";
+import { categoriesController } from "../controllers/general";
+
 const api_tokenVerify = require("../core/naos_api").api_tokenVerify;
 
-var router = express.Router();
+let router = Router();
 /* GET home page. */
-router.use(function (req, res, next) {
+router.use(function (req: any, res, next) {
     res.locals.breadcrumbs = [];
     res.locals.breadcrumbs.push({ link: "/", name: "Home" });
     var name = req.path.split("/")[1];
@@ -18,12 +18,12 @@ router.use(function (req, res, next) {
     if (req.session.auth) next();
     else api_tokenVerify(null, req, res).then(() => {
         next();
-    }).catch(error => next(error))
+    }).catch((error: Error) => next(error))
 });
 router.post("/token", function (req, res, next) {
     api_tokenVerify(req.body.token, req, res).then(function () {
         res.redirect('/');
-    }).catch(error => next(error))
+    }).catch((error: Error) => next(error))
 });
 router.get("/", function (req, res, next) {
     res.render("index", { title: "Naos dashboard" });
@@ -44,7 +44,7 @@ router.post("/discountCreate", discountController.create);
 
 router.get(
     "/orders(/*)?",
-    orerController.findAll
+    orderController.findAll
 );
 router.get(
     "/users(/*)?",
@@ -52,7 +52,6 @@ router.get(
     // productController.paginator,
     userController.findAll
 );
-router.get("/user/:id", userController.findById);
 
 router.all(
     "/products/?(input=:input)?(&|*)?",
@@ -65,4 +64,5 @@ router.get("/productCreate", productController.create);
 router.post("/productCreate", productController.updateOrCreate);
 router.post("/product/:id/edit", productController.updateOrCreate);
 
-module.exports = router;
+export { router as indexRouter }
+export default router
