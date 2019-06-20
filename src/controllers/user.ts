@@ -1,7 +1,8 @@
-const User = require("../core/models").User;
+import { NextFunction, Response, Request } from "express";
+import { User } from "../core/models";
 
 module.exports = {
-    findAll: function (req, res, next) {
+    findAll: function (req: Request, res: Response, next: NextFunction) {
         User.findAll({
             offset: res.locals.offset,
             limit: res.locals.limit
@@ -15,7 +16,7 @@ module.exports = {
             );
         });
     },
-    findById: function (req, res, next) {
+    findById: function (req: Request, res: Response, next: NextFunction) {
         User.findOne({ where: { id: 1 } }).then(users => {
             res.render("users", { user: users });
             // res.send(project);

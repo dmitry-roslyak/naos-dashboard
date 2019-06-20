@@ -1,21 +1,22 @@
-const Discount = require("../core/models").Discount;
+import { NextFunction, Response, Request } from "express";
+import { Discount } from "../core/models"
 
 module.exports = {
-    show: function (req, res, next) {
+    show: function (req: Request, res: Response, next: NextFunction) {
         Discount.findAll().then(discounts => {
             res.render("discounts", { discounts: discounts });
         });
     },
-    showOne: function (req, res, next) {
+    showOne: function (req: Request, res: Response, next: NextFunction) {
         Discount.findByPk(req.params.id).then(discount => {
             res.render("discount", { discount: discount });
         });
     },
-    create: function (req, res, next) {
+    create: function (req: Request, res: Response, next: NextFunction) {
         Discount.create(req.body);
         res.redirect("/discounts");
     },
-    edit: function (req, res, next) {
+    edit: function (req: Request, res: Response, next: NextFunction) {
         Discount.update(req.body, { where: { id: req.params.id } });
         res.redirect("/discounts");
     }

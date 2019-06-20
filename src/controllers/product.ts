@@ -1,25 +1,23 @@
-const Product = require("../core/models").Product;
-const Spec = require("../core/models").Spec;
-const Discount = require("../core/models").Discount;
-const Category = require("../core/models").Category;
-const Sequelize = require("sequelize");
-const Op = Sequelize.Op;
+import { NextFunction, Response, Request } from "express";
+import { Product, Discount, Spec, Category } from "../core/models";
+import { Op, Sequelize } from "sequelize";
+
 const multiparty = require("multiparty");
 const imageUpload = require("../core/naos_api").imageUpload;
 
 Product.belongsTo(Discount);
-Product.hasMany(Spec, { foreignKey: "prod_id", primaryKey: "id" });
+Product.hasMany(Spec, { foreignKey: "prod_id" });
 
 const Controller = {
-    create: function (req, res, next) {
+    create: function (req: Request, res: Response, next: NextFunction) {
         Controller.showOne(req, res, next, {
             rating: 0,
             vote_count: 0,
             is_visible: true,
         });
     },
-    showOne: function (req, res, next, product = null) {
-        let p0 = [];
+    showOne: function (req: Request, res: Response, next: NextFunction, product: Object = null) {
+        let p0: Array<Promise<any> | any> = [];
         p0.push(product || Product.findByPk(req.params.id, {
             include: [Discount, Spec]
         }));
@@ -31,8 +29,8 @@ const Controller = {
             raw: true
         }));
         Promise.all(p0).then(([product, discounts, categories, spec_names]) => {
-            let p1 = [];
-            spec_names.forEach(function (n) {
+            let p1: Array<Promise<any>> = [];
+            spec_names.forEach(function (n: any) {
                 p1.push(Spec.findAll({
                     where: { name: n.name },
                     // attributes: [[Sequelize.literal('DISTINCT `value`'), 'value']],
@@ -41,8 +39,8 @@ const Controller = {
                 }))
             });
             Promise.all(p1).then(function (params) {
-                let spec_values = {};
-                spec_names.forEach(function (n, i) {
+                let spec_values: any = {};
+                spec_names.forEach(function (n: { name: string }, i: number) {
                     spec_values[n.name] = params[i];
                 })
                 res.render("product", {
@@ -55,18 +53,18 @@ const Controller = {
             })
         });
     },
-    updateOrCreate: function (req, res, next) {
+    updateOrCreate: function (req: Request, res: Response, next: NextFunction) {
         var form = new multiparty.Form();
-        form.parse(req, function (err, fields, files) {
-            let imageUploadPromise;
+        form.parse(req, function (err: Error, fields: any, files: any) {
+            let imageUploadPromise: Promise<any>;
             Object.keys(files).forEach(function (name) {
-                files[name].forEach(function (file) {
+                files[name].forEach(function (file: any) {
                     imageUploadPromise = file.size && imageUpload(file);
                 });
             });
             Object.keys(fields).forEach(name => fields[name] = fields[name][0]);
             if (imageUploadPromise) {
-                imageUploadPromise.then(function (fileName) {
+                imageUploadPromise.then(function (fileName: string) {
                     fields.img_src = fileName;
                     console.log(fileName);
                     updateOrCreate();
@@ -75,7 +73,7 @@ const Controller = {
                 })
             } else updateOrCreate();
             function updateOrCreate() {
-                let product = fields.id ? Product.update(fields, { where: { id: fields.id } }) : Product.create(fields);
+                let product: Promise<any> = fields.id ? Product.update(fields, { where: { id: fields.id } }) : Product.create(fields);
                 product.then(function (product) {
                     if (fields.id) {
                         console.log(`Product (id: ${fields.id}) updated`);
@@ -88,10 +86,10 @@ const Controller = {
             }
         });
     },
-    find: function (req, res, next) {
+    find: function (req: Request, res: Response, next: NextFunction) {
         let input =
             req.body.input || res.locals.formInput || req.params.input || "";
-        let options;
+        let options: object;
         if (input) {
             options = {
                 where: {

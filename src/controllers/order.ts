@@ -1,7 +1,8 @@
-const Order = require("../core/models").Order;
+import { NextFunction, Response, Request } from "express";
+import { Order } from "../core/models";
 
 module.exports = {
-    findAll: function (req, res, next) {
+    findAll: function (req: Request, res: Response, next: NextFunction) {
         Order.findAll({
             offset: res.locals.offset,
             limit: res.locals.limit
@@ -16,7 +17,7 @@ module.exports = {
             });
         });
     },
-    findById: function (req, res, next) {
+    findById: function (req: Request, res: Response, next: NextFunction) {
         Order.findOne({ where: { id: 1 } }).then(orders => {
             res.render("users", { order: orders });
             // res.send(project);
