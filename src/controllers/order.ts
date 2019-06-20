@@ -1,7 +1,7 @@
 import { NextFunction, Response, Request } from "express";
 import { Order } from "../core/models";
 
-module.exports = {
+const controller = {
     findAll: function (req: Request, res: Response, next: NextFunction) {
         Order.findAll({
             offset: res.locals.offset,
@@ -24,3 +24,6 @@ module.exports = {
         });
     }
 };
+
+export { controller as orderController }
+export default controller

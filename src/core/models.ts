@@ -38,7 +38,6 @@ User.init({
     name: DataTypes.STRING,
     created_at: DataTypes.DATE,
     updated_at: DataTypes.DATE
-    //   birthday: DataTypes.DATE
 }, { sequelize });
 
 Discount.init({
@@ -46,10 +45,9 @@ Discount.init({
     discount: DataTypes.INTEGER,
     begin_at: DataTypes.DATE,
     end_at: DataTypes.DATE
-}, { sequelize, modelName: 'discount' });
+}, { sequelize });
 
 Product.init({
-    // id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     category_id: { type: DataTypes.INTEGER },
     discount_id: { type: DataTypes.INTEGER },
     name: DataTypes.STRING,
@@ -64,7 +62,6 @@ Product.init({
     arrive_date: DataTypes.DATE,
     created_at: DataTypes.DATE,
     updated_at: DataTypes.DATE
-    //   birthday: DataTypes.DATE
 }, { sequelize });
 
 // sequelize
@@ -82,4 +79,3 @@ Product.init({
 // const a = { Product, Discount, User, Order, Category, Spec };
 export { Product, Discount, User, Order, Category, Spec }
 export default { Product, Discount, User, Order, Category, Spec }
-// module.exports = { Product, Discount, User, Order, Category, Spec }

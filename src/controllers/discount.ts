@@ -1,7 +1,7 @@
 import { NextFunction, Response, Request } from "express";
 import { Discount } from "../core/models"
 
-module.exports = {
+const controller = {
     show: function (req: Request, res: Response, next: NextFunction) {
         Discount.findAll().then(discounts => {
             res.render("discounts", { discounts: discounts });
@@ -21,3 +21,6 @@ module.exports = {
         res.redirect("/discounts");
     }
 };
+
+export { controller as discountController }
+export default controller

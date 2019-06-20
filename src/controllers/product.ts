@@ -8,16 +8,17 @@ const imageUpload = require("../core/naos_api").imageUpload;
 Product.belongsTo(Discount);
 Product.hasMany(Spec, { foreignKey: "prod_id" });
 
-const Controller = {
+const controller = {
     create: function (req: Request, res: Response, next: NextFunction) {
-        Controller.showOne(req, res, next, {
+        let product = Product.build({
             rating: 0,
             vote_count: 0,
             is_visible: true,
         });
+        controller.showOne(req, res, next, product);
     },
-    showOne: function (req: Request, res: Response, next: NextFunction, product: Object = null) {
-        let p0: Array<Promise<any> | any> = [];
+    showOne: function (req: Request, res: Response, next: NextFunction, product: Product = null) {
+        let p0: Array<Promise<any> | Product> = [];
         p0.push(product || Product.findByPk(req.params.id, {
             include: [Discount, Spec]
         }));
@@ -116,4 +117,5 @@ const Controller = {
     }
 };
 
-module.exports = Controller;
+export { controller as productController }
+export default controller

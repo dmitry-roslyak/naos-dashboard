@@ -1,7 +1,7 @@
 import { NextFunction, Response, Request } from "express";
 import { Category } from "../core/models";
 
-module.exports = {
+const controller = {
     showCategories: function (req: Request, res: Response, next: NextFunction) {
         Category.findAll().then(categories => {
             res.render("categories", { categories: categories });
@@ -12,3 +12,6 @@ module.exports = {
         res.redirect("/categories");
     }
 };
+
+export { controller as categoriesController }
+export default controller
