@@ -1,10 +1,11 @@
-const fs = require("fs");
-const request = require("request");
+import { Response } from "express"
+import { createReadStream, unlinkSync } from "fs"
+import { get, post } from "request";
 
-function api_tokenVerify(token, req, res) {
+function api_tokenVerify(token: string, req: any, res: Response) {
     return new Promise((resolve, reject) => {
         token = token || req.session.api_token || process.env.NAOS_API_TOKEN;
-        request.get({
+        get({
             url: process.env.NAOS_URL + "/api/user",
             formData: { token: token }
         }, function (error, httpResponse, body) {
@@ -19,23 +20,24 @@ function api_tokenVerify(token, req, res) {
         });
     });
 }
-function imageUpload(file) {
+function imageUpload(req: any) {
     return new Promise((resolve, reject) => {
-        var formData = {
+        let formData = {
             image: {
-                value: fs.createReadStream(file.path),
+                value: createReadStream(req.file.path),
                 options: {
-                    filename: file.originalFilename
+                    filename: req.file.originalname
                 }
             },
-            api_token: process.env.NAOS_API_TOKEN
+            api_token: req.session.api_token
         };
-        request.post({
+        post({
             url: process.env.NAOS_URL + "/api/image_upload",
             formData: formData,
             preambleCRLF: true,
             postambleCRLF: true
         }, function (error, httpResponse, body) {
+            unlinkSync(req.file.path);
             if (error || httpResponse.statusCode != 200) {
                 reject(error || body)
             } else {
@@ -46,4 +48,5 @@ function imageUpload(file) {
     });
 
 }
-module.exports = { imageUpload, api_tokenVerify };
+
+export { imageUpload, api_tokenVerify }

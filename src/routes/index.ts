@@ -4,10 +4,11 @@ import { orderController } from "../controllers/order";
 import { discountController } from "../controllers/discount";
 import { productController } from "../controllers/product";
 import { categoriesController } from "../controllers/general";
+import { api_tokenVerify } from "../core/naos_api";
+import * as multer from "multer";
 
-const api_tokenVerify = require("../core/naos_api").api_tokenVerify;
-
-let router = Router();
+const router = Router();
+const upload = multer({ dest: 'uploads/' });
 /* GET home page. */
 router.use(function (req: any, res, next) {
     res.locals.breadcrumbs = [];
@@ -61,8 +62,8 @@ router.all(
 );
 router.get("/product/:id", productController.showOne);
 router.get("/productCreate", productController.create);
-router.post("/productCreate", productController.updateOrCreate);
-router.post("/product/:id/edit", productController.updateOrCreate);
+router.post("/productCreate", upload.single('image'), productController.updateOrCreate);
+router.post("/product/:id/edit", upload.single('image'), productController.updateOrCreate);
 
 export { router as indexRouter }
 export default router

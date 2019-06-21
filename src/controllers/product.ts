@@ -1,9 +1,7 @@
 import { NextFunction, Response, Request } from "express";
 import { Product, Discount, Spec, Category } from "../core/models";
 import { Op, Sequelize } from "sequelize";
-
-const multiparty = require("multiparty");
-const imageUpload = require("../core/naos_api").imageUpload;
+import { imageUpload } from "../core/naos_api";
 
 Product.belongsTo(Discount);
 Product.hasMany(Spec, { foreignKey: "prod_id" });
@@ -55,38 +53,35 @@ const controller = {
         });
     },
     updateOrCreate: function (req: Request, res: Response, next: NextFunction) {
-        var form = new multiparty.Form();
-        form.parse(req, function (err: Error, fields: any, files: any) {
-            let imageUploadPromise: Promise<any>;
-            Object.keys(files).forEach(function (name) {
-                files[name].forEach(function (file: any) {
-                    imageUploadPromise = file.size && imageUpload(file);
-                });
-            });
-            Object.keys(fields).forEach(name => fields[name] = fields[name][0]);
-            if (imageUploadPromise) {
-                imageUploadPromise.then(function (fileName: string) {
-                    fields.img_src = fileName;
-                    console.log(fileName);
-                    updateOrCreate();
-                }).catch(function (error) {
-                    console.error(error);
-                })
-            } else updateOrCreate();
-            function updateOrCreate() {
-                let product: Promise<any> = fields.id ? Product.update(fields, { where: { id: fields.id } }) : Product.create(fields);
-                product.then(function (product) {
-                    if (fields.id) {
-                        console.log(`Product (id: ${fields.id}) updated`);
-                        res.redirect(".");
-                    } else {
-                        console.log(`Product created`);
-                        res.redirect("/product/" + product.id);
-                    }
-                })
-            }
-        });
+        let fields = req.body;
+        let imageUploadPromise = req.file && imageUpload(req)
+
+        Object.keys(fields).forEach(name => Array.isArray(fields[name]) && (fields[name] = fields[name][0]));
+
+        if (imageUploadPromise) {
+            imageUploadPromise.then(function (fileName: string) {
+                fields.img_src = fileName;
+                console.log(fileName);
+                updateOrCreate();
+            }).catch(function (error) {
+                console.error(error);
+            })
+        } else updateOrCreate();
+
+        function updateOrCreate() {
+            let product: Promise<any> = fields.id ? Product.update(fields, { where: { id: fields.id } }) : Product.create(fields);
+            product.then(function (product) {
+                if (fields.id) {
+                    console.log(`Product (id: ${fields.id}) updated`);
+                    res.redirect(".");
+                } else {
+                    console.log(`Product created`);
+                    res.redirect("/product/" + product.id);
+                }
+            })
+        }
     },
+
     find: function (req: Request, res: Response, next: NextFunction) {
         let input =
             req.body.input || res.locals.formInput || req.params.input || "";
