@@ -1,26 +1,24 @@
-import { Response } from "express"
+import { Response, Request } from "express"
 import { createReadStream, unlinkSync } from "fs"
 import { get, post } from "request";
 
-function api_tokenVerify(token: string, req: any, res: Response) {
+function api_tokenVerify(token: string, req: Request, res: Response) {
     return new Promise((resolve, reject) => {
-        token = token || req.session.api_token || process.env.NAOS_API_TOKEN;
         get({
             url: process.env.NAOS_URL + "/api/user",
             formData: { token: token }
         }, function (error, httpResponse, body) {
             if (error || httpResponse.statusCode != 200) {
-                req.session.auth = false;
+                res.cookie('api_token', null, { signed: true, sameSite: true })
                 reject(error);
             } else {
-                req.session.auth = true;
-                req.session.api_token = token;
+                res.cookie('api_token', token, { signed: true, sameSite: true })
                 resolve();
             }
         });
     });
 }
-function imageUpload(req: any) {
+function imageUpload(req: Request) {
     return new Promise((resolve, reject) => {
         let formData = {
             image: {
@@ -29,7 +27,7 @@ function imageUpload(req: any) {
                     filename: req.file.originalname
                 }
             },
-            api_token: req.session.api_token
+            api_token: req.signedCookies.api_token
         };
         post({
             url: process.env.NAOS_URL + "/api/image_upload",

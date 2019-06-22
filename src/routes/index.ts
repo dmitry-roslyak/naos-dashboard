@@ -9,17 +9,16 @@ import * as multer from "multer";
 
 const router = Router();
 const upload = multer({ dest: 'uploads/' });
-/* GET home page. */
-router.use(function (req: any, res, next) {
+
+router.use(function (req, res, next) {
     res.locals.breadcrumbs = [];
     res.locals.breadcrumbs.push({ link: "/", name: "Home" });
     var name = req.path.split("/")[1];
     name && res.locals.breadcrumbs.push({ link: req.path, name: name });
 
-    if (req.session.auth) next();
-    else api_tokenVerify(null, req, res).then(() => {
-        next();
-    }).catch((error: Error) => next(error))
+    // console.log(req.signedCookies.api_token)
+    res.locals.authentication = !!req.signedCookies.api_token;
+    next();
 });
 router.post("/token", function (req, res, next) {
     api_tokenVerify(req.body.token, req, res).then(function () {
