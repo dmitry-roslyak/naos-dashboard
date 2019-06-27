@@ -6,6 +6,8 @@ var logger = require("morgan");
 const uuidv4 = require('uuid/v4');
 
 import indexRouter from "./routes/index";
+import adminRouter from "./routes/admin";
+
 // var usersRouter = require("./routes/users");
 require("./core/config-init");
 
@@ -20,7 +22,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(uuidv4()));
 app.use(express.static(path.join(__dirname, "../public")));
 
-app.use("/", indexRouter);
+app.use("/", indexRouter, adminRouter);
 // app.use("/users", usersRouter);
 
 // catch 404 and forward to error handler

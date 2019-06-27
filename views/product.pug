@@ -97,7 +97,7 @@ block content
                     td
                         input(class="form-control form-control-sm" type="date" id="arrive_date" name="arrive_date" value=(product.id?new Date(product.arrive_date):new Date()).toISOString().substring(0, 10)) 
         <p>
-            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"> View specifications
+            <button class="btn btn-primary btn-sm" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"> View specifications
             </button>
         </p>
         <div class="collapse" id="collapseExample">
@@ -105,4 +105,4 @@ block content
                 include productSpecs
             </div>
         </div>
-        button(class="btn btn-primary my-3"  type="submit") #{product.id ? "Update" : "Create" }
+        button(class="btn btn-primary btn-sm my-3"  type="submit" disabled=!authentication) #{product.id ? "Update" : "Create" }

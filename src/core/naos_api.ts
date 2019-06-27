@@ -12,7 +12,7 @@ function api_tokenVerify(token: string, req: Request, res: Response) {
                 res.cookie('api_token', null, { signed: true, sameSite: true })
                 reject(error);
             } else {
-                res.cookie('api_token', token, { signed: true, sameSite: true })
+                res.cookie('api_token', token, { expires: new Date(24 * 60 * 60 * 1000 + Date.now()), signed: true, sameSite: true })
                 resolve();
             }
         });

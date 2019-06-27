@@ -1,14 +1,12 @@
-import { NextFunction, Response, Request, Router } from "express";
+import { Router } from "express";
 import { userController } from "../controllers/user";
 import { orderController } from "../controllers/order";
 import { discountController } from "../controllers/discount";
 import { productController } from "../controllers/product";
 import { categoriesController } from "../controllers/general";
 import { api_tokenVerify } from "../core/naos_api";
-import * as multer from "multer";
 
 const router = Router();
-const upload = multer({ dest: 'uploads/' });
 
 router.use(function (req, res, next) {
     res.locals.breadcrumbs = [];
@@ -35,12 +33,9 @@ router.all("*offset=:offset&limit=:limit", function (req, res, next) {
 });
 
 router.get("/categories", categoriesController.showCategories);
-router.post("/categoryCreate", categoriesController.createCategory);
 
 router.get("/discounts", discountController.show);
 router.get("/discount/:id", discountController.showOne);
-router.post("/discount/:id/edit", discountController.edit);
-router.post("/discountCreate", discountController.create);
 
 router.get(
     "/orders(/*)?",
@@ -61,8 +56,6 @@ router.all(
 );
 router.get("/product/:id", productController.showOne);
 router.get("/productCreate", productController.create);
-router.post("/productCreate", upload.single('image'), productController.updateOrCreate);
-router.post("/product/:id/edit", upload.single('image'), productController.updateOrCreate);
 
 export { router as indexRouter }
 export default router
