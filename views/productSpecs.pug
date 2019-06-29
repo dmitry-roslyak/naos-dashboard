@@ -3,18 +3,19 @@ div
     table(class="table table-hover")
         thead
             tr
-                th id
+                th select 
                 th name
                 th value
                 th val_type
         tbody
-            if product.specs
-                each spec in product.specs
+            if product.Specs
+                each spec in product.Specs
                     tr
-                        td #{spec.id}
+                        td
+                            <input type="checkbox" checked>
                         td #{spec.name}
                         td
-                            <select class="custom-select custom-select-sm" name="discount_id" disabled>
+                            <select class="custom-select custom-select-sm" disabled>
                                 each s in spec_values[spec.name]
                                     if s.value == spec.value
                                         option(value=s.value selected) #{s.value}
@@ -23,14 +24,15 @@ div
                             </select>
                         td #{spec.val_type}
             else
-                each s in spec_names
+                each name in spec_names
                     tr
                         td
-                        td #{s.name}
+                            <input type="checkbox">
+                        td #{name}
                         td
-                            <select class="custom-select custom-select-sm" name="discount_id">
-                                option(value=null) Select value
-                                each s1 in spec_values[s.name]
-                                    option(value=s1.value) #{s1.value}
+                            <select class="custom-select custom-select-sm" name="specs">
+                                option(value="") Select value
+                                each spec in spec_values[name]
+                                    option(value={name: name, value: spec.value}) #{spec.value}
                             </select>
-                        td 
+                        td

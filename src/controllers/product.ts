@@ -2,6 +2,7 @@ import { NextFunction, Response, Request } from "express";
 import { Product, Discount, Spec, Category } from "../core/models";
 import { Op, Sequelize } from "sequelize";
 import { imageUpload } from "../core/naos_api";
+import * as _ from "lodash";
 
 Product.belongsTo(Discount);
 Product.hasMany(Spec, { foreignKey: "prod_id" });
@@ -23,33 +24,20 @@ const controller = {
         p0.push(Discount.findAll());
         p0.push(Category.findAll());
         p0.push(Spec.findAll({
-            attributes: ['name'],
-            group: ['name'],
+            attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('name')), 'name'], 'value', 'val_type'],
             raw: true
         }));
-        Promise.all(p0).then(([product, discounts, categories, spec_names]) => {
-            let p1: Array<Promise<any>> = [];
-            spec_names.forEach(function (n: any) {
-                p1.push(Spec.findAll({
-                    where: { name: n.name },
-                    // attributes: [[Sequelize.literal('DISTINCT `value`'), 'value']],
-                    attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('value')), 'value'], 'val_type'],
-                    raw: true
-                }))
+
+        Promise.all(p0).then(([product, discounts, categories, specs]) => {
+            let s: any = _.groupBy(specs, object => object.name)
+
+            res.render("product", {
+                product: product,
+                discounts: discounts,
+                categories: categories,
+                spec_names: Object.keys(s),
+                spec_values: s
             });
-            Promise.all(p1).then(function (params) {
-                let spec_values: any = {};
-                spec_names.forEach(function (n: { name: string }, i: number) {
-                    spec_values[n.name] = params[i];
-                })
-                res.render("product", {
-                    product: product,
-                    discounts: discounts,
-                    categories: categories,
-                    spec_names: spec_names,
-                    spec_values: spec_values
-                });
-            })
         });
     },
     updateOrCreate: function (req: Request, res: Response, next: NextFunction) {
