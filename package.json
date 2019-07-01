@@ -3,8 +3,8 @@
     "version": "0.0.0",
     "private": true,
     "scripts": {
-        "dev": "tsc && cross-env NODE_ENV=production node ./bin/www",
-        "watch": "tsc -w && cross-env NODE_ENV=production node ./bin/www"
+        "prod": "tsc && cross-env NODE_ENV=production node ./bin/www",
+        "watch": "tsc -w"
     },
     "dependencies": {
         "axios": "^0.18.0",

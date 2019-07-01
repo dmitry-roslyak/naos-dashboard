@@ -27,8 +27,9 @@ function imageUpload(req: Request) {
                     filename: req.file.originalname
                 }
             },
-            api_token: req.signedCookies.api_token
+            api_token: req.signedCookies.api_token || process.env.NODE_ENV !== 'production' && process.env.NAOS_API_TOKEN
         };
+        if (!formData.api_token) throw new Error("api_token is undefined")
         post({
             url: process.env.NAOS_URL + "/api/image_upload",
             formData: formData,
