@@ -3,36 +3,34 @@ div
     table(class="table table-hover")
         thead
             tr
-                th select 
                 th name
                 th value
                 th val_type
         tbody
-            if product.Specs
-                each spec in product.Specs
-                    tr
-                        td
-                            <input type="checkbox" checked>
-                        td #{spec.name}
-                        td
-                            <select class="custom-select custom-select-sm" disabled>
+            each spec in (product.Specs || specs)
+                tr
+                    td 
+                        input(type="text" name=`specs[${spec.name}][name]` value=spec.name)
+                    td
+                        select(class="custom-select custom-select-sm"  name=`specs[${spec.name}][value]`)
+                            if product.Specs
                                 each s in spec_values[spec.name]
                                     if s.value == spec.value
                                         option(value=s.value selected) #{s.value}
                                     else 
                                         option(value=s.value) #{s.value}
-                            </select>
-                        td #{spec.val_type}
-            else
-                each name in spec_names
-                    tr
-                        td
-                            <input type="checkbox">
-                        td #{name}
-                        td
-                            <select class="custom-select custom-select-sm" name="specs">
-                                option(value="") Select value
-                                each spec in spec_values[name]
-                                    option(value={name: name, value: spec.value}) #{spec.value}
-                            </select>
-                        td
+                            else
+                                option(value="") Select 
+                                each s in spec_values[spec.name]
+                                    option(value=s.value) #{s.value}
+                    td  
+                        input(type="text" name=`specs[${spec.name}][val_type]` value=spec.val_type)
+            //- each empty in ["","",""]
+            //-     tr 
+            //-         tr
+            //-             td 
+            //-                 <input type="text">
+            //-             td
+            //-                 <input type="text">
+            //-             td
+            //-                 <input type="text">            

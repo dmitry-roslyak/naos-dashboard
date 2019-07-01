@@ -4,9 +4,6 @@ import { Op, Sequelize } from "sequelize";
 import { imageUpload } from "../core/naos_api";
 import * as _ from "lodash";
 
-Product.belongsTo(Discount);
-Product.hasMany(Spec, { foreignKey: "prod_id" });
-
 const controller = {
     create: function (req: Request, res: Response, next: NextFunction) {
         let product = Product.build({
@@ -29,14 +26,16 @@ const controller = {
         }));
 
         Promise.all(p0).then(([product, discounts, categories, specs]) => {
-            let s: any = _.groupBy(specs, object => object.name)
+            let spec_values = _.groupBy(specs, object => object.name)
+            let s2 = _.uniqBy(specs, (object: any) => object.name)
 
+            console.log(product)
             res.render("product", {
                 product: product,
                 discounts: discounts,
                 categories: categories,
-                spec_names: Object.keys(s),
-                spec_values: s
+                specs: s2,
+                spec_values: spec_values
             });
         });
     },
@@ -44,29 +43,36 @@ const controller = {
         let fields = req.body;
         let imageUploadPromise = req.file && imageUpload(req)
 
-        Object.keys(fields).forEach(name => Array.isArray(fields[name]) && (fields[name] = fields[name][0]));
-
+        Object.keys(fields).forEach(name => name == "specs" || Array.isArray(fields[name]) && (fields[name] = fields[name][0]));
+        fields.Specs = Object.values(fields.specs)
+        fields.Specs = fields.Specs.filter((element: any) => element.value.length > 0);
+        // console.log(fields)
         if (imageUploadPromise) {
             imageUploadPromise.then(function (fileName: string) {
                 fields.img_src = fileName;
                 console.log(fileName);
                 updateOrCreate();
             }).catch(function (error) {
-                console.error(error);
+                res.status(500).send(error.message);
             })
         } else updateOrCreate();
 
         function updateOrCreate() {
-            let product: Promise<any> = fields.id ? Product.update(fields, { where: { id: fields.id } }) : Product.create(fields);
-            product.then(function (product) {
-                if (fields.id) {
-                    console.log(`Product (id: ${fields.id}) updated`);
-                    res.redirect(".");
-                } else {
-                    console.log(`Product created`);
-                    res.redirect("/product/" + product.id);
-                }
-            })
+            Product.createOrUpdateWithSpecs(fields).then((result) => {
+                // console.log(result)
+                setTimeout(() => {
+                    if (fields.id) {
+                        console.log(`Product (id: ${fields.id}) updated`);
+                        res.redirect(".");
+                    } else {
+                        console.log(`Product created`);
+                        res.redirect("/product/" + result[0].id);
+                    }
+                }, 50);
+            }).catch(err => {
+                console.error(err)
+                res.status(400).send(err.message);
+            });
         }
     },
 

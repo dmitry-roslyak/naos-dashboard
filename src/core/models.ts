@@ -1,19 +1,47 @@
 import { Sequelize, Model, DataTypes, BuildOptions } from 'sequelize';
-const sequelize = require("../core/config-init").sequelize;
+import sequelize from './config-init';
 
-class Spec extends Model { }
+class Spec extends Model {
+    name: string;
+}
 class Category extends Model { }
 class Order extends Model { }
 class User extends Model { }
 class Discount extends Model { }
-class Product extends Model { }
+class Product extends Model {
+    Specs: Spec[];
+    static createOrUpdateWithSpecs(fields: any) {
+        return sequelize.transaction(t => {
+            let array: Array<Promise<any>> = [];
+
+            if (fields.id) {
+                Product.findByPk(fields.id, {
+                    include: [Spec]
+                }).then(product => {
+                    product.Specs.forEach(spec => {
+                        array.push(spec.update(fields.specs[spec.name]))
+                    })
+                    array.push(product.update(fields))
+                })
+            } else {
+                array.push(Product.create(fields, {
+                    include: [Spec]
+                }));
+            }
+            return Promise.all(array);
+        })
+    }
+}
 
 Spec.init({
-    id: { type: DataTypes.INTEGER, primaryKey: true },
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     prod_id: { type: DataTypes.INTEGER },
     name: DataTypes.STRING,
     value: DataTypes.STRING,
     val_type: DataTypes.STRING,
+    category: { type: DataTypes.STRING, defaultValue: "basic" },
+    isComparable: { type: DataTypes.BOOLEAN, defaultValue: false, field: "isComparable" },
+    isFilterable: { type: DataTypes.BOOLEAN, defaultValue: false, field: "isFilterable" }
 }, { sequelize });
 
 Category.init({
@@ -75,7 +103,10 @@ Product.init({
 //     .then(jane => {
 //         console.log(jane.toJSON());
 //     });
-// export default Discount
-// const a = { Product, Discount, User, Order, Category, Spec };
+
+Product.belongsTo(Discount);
+Product.hasMany(Spec, { foreignKey: "prod_id", constraints: false });
+// Product.Specs = Product.hasMany(Spec, { foreignKey: "prod_id", constraints: false });
+
 export { Product, Discount, User, Order, Category, Spec }
 export default { Product, Discount, User, Order, Category, Spec }
