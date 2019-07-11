@@ -4,16 +4,15 @@ import { orderController } from "../controllers/order";
 import { discountController } from "../controllers/discount";
 import { productController } from "../controllers/product";
 import { categoriesController } from "../controllers/general";
-import { api_tokenVerify } from "../core/naos_api";
+import { api_tokenVerify, statusCheck } from "../core/naos_api";
 
 const router = Router();
 
 router.use(function (req, res, next) {
-    res.locals.breadcrumbs = [];
-    res.locals.breadcrumbs.push({ link: "/", name: "Home" });
-    var name = req.path.split("/")[1];
-    name && res.locals.breadcrumbs.push({ link: req.path, name: name });
     // console.log(req.signedCookies.api_token)
+    res.locals.title = "Naos dashboard";
+    res.locals.errors = [];
+    res.locals.server = { url: process.env.NAOS_URL, status: 500 }
     res.locals.authentication = !!req.signedCookies.api_token;
     process.env.NODE_ENV !== 'production' && (res.locals.authentication = true);
     next();
@@ -24,7 +23,13 @@ router.post("/token", function (req, res, next) {
     }).catch((error: Error) => next(error))
 });
 router.get("/", function (req, res, next) {
-    res.render("index", { title: "Naos dashboard" });
+    statusCheck().then(status => {
+        res.locals.server.status = status;
+        res.render("index");
+    }).catch(err => {
+        res.locals.errors.push(err.message);
+        res.render("index");
+    })
 });
 router.all("*offset=:offset&limit=:limit", function (req, res, next) {
     res.locals.offset = +req.params.offset || +req.body.offset || null;

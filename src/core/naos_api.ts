@@ -1,6 +1,6 @@
 import { Response, Request } from "express"
 import { createReadStream, unlinkSync } from "fs"
-import { get, post } from "request";
+import { get, post, head } from "request";
 
 function api_tokenVerify(token: string, req: Request, res: Response) {
     return new Promise((resolve, reject) => {
@@ -17,6 +17,14 @@ function api_tokenVerify(token: string, req: Request, res: Response) {
             }
         });
     });
+}
+function statusCheck() {
+    return new Promise((resolve, reject) => {
+        head(process.env.NAOS_URL, function (error, httpResponse, body) {
+            error && reject(error)
+            httpResponse && resolve(httpResponse.statusCode)
+        })
+    })
 }
 function imageUpload(req: Request) {
     return new Promise((resolve, reject) => {
@@ -48,4 +56,4 @@ function imageUpload(req: Request) {
 
 }
 
-export { imageUpload, api_tokenVerify }
+export { imageUpload, api_tokenVerify, statusCheck }
