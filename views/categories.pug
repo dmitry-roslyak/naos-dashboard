@@ -1,7 +1,6 @@
 extends layout
 
 block content
-    h1=title
     form(action="/categoryCreate" method="post")
         table(class="table table-hover")
             thead
@@ -10,17 +9,17 @@ block content
                     th name
                     th action
             tbody
-                each category in categories
-                    tr
-                        td #{category.id}
-                        td #{category.name}
-                        td 
                 tr
                     td 
                     td 
                         input(class="form-control form-control-sm" type="text", id="name" name="name") 
                     td 
                         button(class="btn btn-primary btn-sm"  type="submit" disabled=!authentication) Create
+                each category in categories
+                    tr
+                        td #{category.id}
+                        td #{category.name}
+                        td 
 //- block pagination
 //-     include paginator
 //-     +paginator(total, `/discounts/`)

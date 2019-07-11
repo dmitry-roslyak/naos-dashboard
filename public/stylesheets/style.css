@@ -27,3 +27,8 @@ a {
     max-width: 76rem;
     margin: auto;
 }
+
+.products-table img {
+    max-width: 9rem;
+    max-height: 9rem;
+}

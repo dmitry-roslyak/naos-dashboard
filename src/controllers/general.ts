@@ -4,7 +4,7 @@ import { Category } from "../core/models";
 const controller = {
     showCategories: function (req: Request, res: Response, next: NextFunction) {
         Category.findAll().then(categories => {
-            res.render("categories", { categories: categories });
+            res.render("categories", { categories: categories, title: "Categories" });
         });
     },
     createCategory: function (req: Request, res: Response, next: NextFunction) {

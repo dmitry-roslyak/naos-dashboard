@@ -29,13 +29,14 @@ const controller = {
             let spec_values = _.groupBy(specs, object => object.name)
             let s2 = _.uniqBy(specs, (object: any) => object.name)
 
-            console.log(product)
+            // console.log(product)
             res.render("product", {
                 product: product,
                 discounts: discounts,
                 categories: categories,
                 specs: s2,
-                spec_values: spec_values
+                spec_values: spec_values,
+                title: "Product"
             });
         });
     },
@@ -100,7 +101,7 @@ const controller = {
                 res.locals.formInput = input;
                 res.locals.products = products;
                 res.locals.total = total;
-                res.render("products");
+                res.render("products", { title: "Products" });
             });
         });
     }

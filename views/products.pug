@@ -1,7 +1,6 @@
 extends layout
 
 block content
-    h1=title
     form(action=`/products`, method="post")
         <div class="input-group mb-3">
             input(name="input" type="text" class="form-control" value=`${formInput}` placeholder="" aria-label="Search" aria-describedby="button-addon1")
@@ -9,12 +8,12 @@ block content
                 <button class="btn btn-outline-secondary" type="submit" id="button-addon1">Search</button>
             </div>
         </div>
-    div #{products.length || 'error'}
-    table(class="table table-hover")
+    table(class="table table-hover products-table")
         thead
             tr
                 th ID
                 th Name
+                th Image
                 th Category ID
                 th Discount ID
                 th Description
@@ -22,12 +21,14 @@ block content
                 th Vote count
                 th Available
                 th Arrive date
-                th Edit
+                th Action
         tbody
             each product in products
                 tr
                     td #{product.id}
                     td #{product.name}
+                    td
+                        img(src=server.url+"/file/"+product.img_src)
                     td #{product.category_id}
                     td #{product.discount_id}
                     td #{product.description}
@@ -40,7 +41,7 @@ block content
                     //- td 
                     //-     include productSpecs
                     td 
-                        a(href=`/product/${product.id}`) Edit
+                        a(href=`/product/${product.id}`) Edit |
 block pagination
     include paginator
     +paginator(total, formInput ? `/products/input=${formInput}&` : '/products/' )

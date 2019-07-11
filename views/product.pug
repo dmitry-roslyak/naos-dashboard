@@ -1,7 +1,6 @@
 extends layout
 
 block content
-    h1=title 
     //- button(class="btn btn-primary mb-3" id="preview") Preview
     //-     iframe(src=`http://localhost/#/detail/${product.id}`, frameborder="0" style="width:53.4rem;height: 30rem")
     form(action=`/product${product.id ? `/${product.id}/edit` : "Create" }`, method="post", enctype="multipart/form-data")
@@ -12,7 +11,7 @@ block content
                         tr
                             td
                                 if product.id 
-                                    img(src=`http://localhost/file/${product.img_src}` style="height:6rem") 
+                                    img(src=`${server.url}/file/${product.img_src}` style="height:6rem") 
                             td
                                 input(type="file" name="image")
                         if product.id 

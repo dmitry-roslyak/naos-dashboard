@@ -10,7 +10,7 @@ const router = Router();
 
 router.use(function (req, res, next) {
     // console.log(req.signedCookies.api_token)
-    res.locals.title = "Naos dashboard";
+    res.locals.appName = "Naos dashboard";
     res.locals.errors = [];
     res.locals.server = { url: process.env.NAOS_URL, status: 500 }
     res.locals.authentication = !!req.signedCookies.api_token;
@@ -25,10 +25,10 @@ router.post("/token", function (req, res, next) {
 router.get("/", function (req, res, next) {
     statusCheck().then(status => {
         res.locals.server.status = status;
-        res.render("index");
+        res.render("index", { title: res.locals.appName });
     }).catch(err => {
         res.locals.errors.push(err.message);
-        res.render("index");
+        res.render("index", { title: res.locals.appName });
     })
 });
 router.all("*offset=:offset&limit=:limit", function (req, res, next) {
