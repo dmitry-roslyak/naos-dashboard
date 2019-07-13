@@ -1,13 +1,17 @@
-import { NextFunction, Response, Request } from "express";
+import { RequestHandler } from "express";
 import { Category } from "../core/models";
 
-const controller = {
-    showCategories: function (req: Request, res: Response, next: NextFunction) {
+interface Controller {
+    [property: string]: RequestHandler
+}
+
+const controller: Controller = {
+    showCategories: function (req, res) {
         Category.findAll().then(categories => {
             res.render("categories", { categories: categories, title: "Categories" });
         });
     },
-    createCategory: function (req: Request, res: Response, next: NextFunction) {
+    createCategory: function (req, res) {
         Category.create(req.body);
         res.redirect("/categories");
     }

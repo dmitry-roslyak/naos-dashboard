@@ -3,7 +3,7 @@ import { userController } from "../controllers/user";
 import { orderController } from "../controllers/order";
 import { discountController } from "../controllers/discount";
 import { productController } from "../controllers/product";
-import { categoriesController } from "../controllers/general";
+import { categoriesController } from "../controllers/category";
 import * as multer from "multer";
 
 const router = Router();
