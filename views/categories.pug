@@ -19,7 +19,9 @@ block content
                     tr
                         td #{category.id}
                         td #{category.name}
-                        td 
+                        block tableActions
+                            include tableActions
+                            +tableActions({category})
 //- block pagination
 //-     include paginator
 //-     +paginator(total, `/discounts/`)

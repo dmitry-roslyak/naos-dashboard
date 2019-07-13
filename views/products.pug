@@ -14,8 +14,8 @@ block content
                 th ID
                 th Name
                 th Image
-                th Category ID
-                th Discount ID
+                //- th Category ID
+                //- th Discount ID
                 th Description
                 th Rating
                 th Vote count
@@ -29,19 +29,20 @@ block content
                     td #{product.name}
                     td
                         img(src=server.url+"/file/"+product.img_src)
-                    td #{product.category_id}
-                    td #{product.discount_id}
+                    //- td #{product.category_id}
+                    //- td #{product.discount_id}
                     td #{product.description}
                     td #{product.rating}
                     td #{product.vote_count}
                     td #{product.available}
-                    td #{product.arrive_date}
+                    td
+                        input(class="form-control form-control-sm" type="date" disabled value=(product.id?new Date(product.arrive_date):new Date()).toISOString().substring(0, 10) ) 
+                        //- #{product.arrive_date}
                     //- td #{product.created_at}
                     //- td #{product.updated_at}
-                    //- td 
-                    //-     include productSpecs
-                    td 
-                        a(href=`/product/${product.id}`) Edit |
+                    block tableActions
+                        include tableActions
+                        +tableActions({product})
 block pagination
     include paginator
     +paginator(total, formInput ? `/products/input=${formInput}&` : '/products/' )
