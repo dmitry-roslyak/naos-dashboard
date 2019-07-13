@@ -10,6 +10,7 @@ const router = Router();
 
 router.use(function (req, res, next) {
     // console.log(req.signedCookies.api_token)
+    res.locals.url = req.url;
     res.locals.appName = "Naos dashboard";
     res.locals.errors = [];
     res.locals.server = { url: process.env.NAOS_URL, status: 500 }
@@ -61,6 +62,16 @@ router.all(
 );
 router.get("/product/:id", productController.showOne);
 router.get("/productCreate", productController.create);
+
+router.get("/delete", function (req, res, next) {
+    res.render("deleteWarning", {
+        item: {
+            category: req.query.itemCategory,
+            id: req.query.id
+        },
+        href: req.query.href,
+    })
+})
 
 export { router as indexRouter }
 export default router

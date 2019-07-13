@@ -5,4 +5,4 @@ mixin tableActions(item)
     td(class="column-action")
         a(href=`/${category}/${id}`) Edit
         span &nbsp;|&nbsp;
-        a(href=`/delete?itemCategory=${category}&id=${id}`) Delete
+        a(href=`/delete?itemCategory=${category}&id=${id}&href=${url}`) Delete

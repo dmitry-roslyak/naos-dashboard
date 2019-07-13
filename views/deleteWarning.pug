@@ -1,0 +1,8 @@
+extends layout
+
+block content
+    div(style="text-align:center")
+        h5 Delete #{item.category} (id: #{item.id})?
+        form(action=`/${item.category}/${item.id}/delete` method="post")
+            button(class="btn btn-danger btn-sm m-2"  type="submit" disabled=!authentication) Delete
+            a(class="btn btn-primary btn-sm m-2" role="button" href=href) Cancel
