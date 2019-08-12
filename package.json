@@ -3,7 +3,7 @@
     "version": "0.0.0",
     "private": true,
     "scripts": {
-        "prod": "tsc && cross-env NODE_ENV=production node ./bin/www",
+        "start": "tsc && cross-env NODE_ENV=production node ./bin/www",
         "watch": "tsc -w"
     },
     "dependencies": {

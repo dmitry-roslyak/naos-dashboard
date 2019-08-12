@@ -1,6 +1,5 @@
 config.json
 /.vscode
-/dist
 /uploads
 
 # Logs
