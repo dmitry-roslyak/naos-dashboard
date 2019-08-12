@@ -6,7 +6,7 @@ interface Controller {
 }
 
 const controller: Controller = {
-    showCategories: function (req, res) {
+    show: function (req, res) {
         Category.findAll().then(categories => {
             res.render("categories", { categories: categories, title: "Categories" });
         });
@@ -14,7 +14,12 @@ const controller: Controller = {
     createCategory: function (req, res) {
         Category.create(req.body);
         res.redirect("/categories");
-    }
+    },
+    showOne: function (req, res) {
+        Category.findByPk(req.params.id).then(category => {
+            res.render("category", { category, title: "Category" });
+        });
+    },
 };
 
 export { controller as categoriesController }

@@ -38,7 +38,8 @@ router.all("*offset=:offset&limit=:limit", function (req, res, next) {
     res.locals.limit = +req.params.limit || +req.body.limit || 30;
     next();
 });
-router.get("/categories", category_1.categoriesController.showCategories);
+router.get("/categories", category_1.categoriesController.show);
+router.get("/category/:id", category_1.categoriesController.showOne);
 router.get("/discounts", discount_1.discountController.show);
 router.get("/discount/:id", discount_1.discountController.showOne);
 router.get("/orders(/*)?", order_1.orderController.findAll);

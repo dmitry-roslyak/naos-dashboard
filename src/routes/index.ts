@@ -38,7 +38,8 @@ router.all("*offset=:offset&limit=:limit", function (req, res, next) {
     next();
 });
 
-router.get("/categories", categoriesController.showCategories);
+router.get("/categories", categoriesController.show);
+router.get("/category/:id", categoriesController.showOne);
 
 router.get("/discounts", discountController.show);
 router.get("/discount/:id", discountController.showOne);
