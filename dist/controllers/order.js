@@ -8,7 +8,7 @@ const controller = {
             limit: res.locals.limit
         }).then(orders => {
             models_1.Order.count().then(total => {
-                // orders.forEach(order => order.name = "**** ****")
+                !process.env.isUserNamesVisible && orders.forEach(order => order.name = "**** ****");
                 res.render("orders", {
                     orders: orders,
                     total: total,

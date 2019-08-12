@@ -5,8 +5,12 @@ class Spec extends Model {
     name: string;
 }
 class Category extends Model { }
-class Order extends Model { }
-class User extends Model { }
+class Order extends Model {
+    name: string
+}
+class User extends Model {
+    name: string
+}
 class Discount extends Model { }
 class Product extends Model {
     Specs: Spec[];
@@ -64,6 +68,8 @@ Order.init({
 User.init({
     id: { type: DataTypes.INTEGER, primaryKey: true },
     name: DataTypes.STRING,
+    currency: DataTypes.STRING,
+    language: DataTypes.STRING,
     created_at: DataTypes.DATE,
     updated_at: DataTypes.DATE
 }, { sequelize });

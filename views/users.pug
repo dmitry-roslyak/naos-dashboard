@@ -6,13 +6,19 @@ block content
             tr
                 th ID
                 th Name
+                th Currency
+                th Language
                 th Created Date
+                th Updated Date
         tbody
             each user in users
                 tr
                     td #{user.id}
                     td #{user.name}
+                    td #{user.currency}
+                    td #{user.language}
                     td #{user.created_at}
+                    td #{user.updated_at}
     //- p Welcome #{JSON.stringify(user)}
 block pagination
     include paginator

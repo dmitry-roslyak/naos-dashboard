@@ -69,6 +69,8 @@ Order.init({
 User.init({
     id: { type: sequelize_1.DataTypes.INTEGER, primaryKey: true },
     name: sequelize_1.DataTypes.STRING,
+    currency: sequelize_1.DataTypes.STRING,
+    language: sequelize_1.DataTypes.STRING,
     created_at: sequelize_1.DataTypes.DATE,
     updated_at: sequelize_1.DataTypes.DATE
 }, { sequelize: config_init_1.default });

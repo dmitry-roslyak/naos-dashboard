@@ -7,6 +7,7 @@ const controller = {
             offset: res.locals.offset,
             limit: res.locals.limit
         }).then(users => {
+            !process.env.isUserNamesVisible && users.forEach(user => user.name = "**** ****");
             models_1.User.count().then(total => res.render("users", {
                 users: users,
                 total: total,
