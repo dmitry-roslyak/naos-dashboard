@@ -98,18 +98,6 @@ Product.init({
     updated_at: DataTypes.DATE
 }, { sequelize });
 
-// sequelize
-//     .sync()
-//     .then(() =>
-//         User.create({
-//             name: "janedoe"
-//             // birthday: new Date(1980, 6, 20)
-//         })
-//     )
-//     .then(jane => {
-//         console.log(jane.toJSON());
-//     });
-
 Product.belongsTo(Discount);
 Product.hasMany(Spec, { foreignKey: "prod_id", constraints: false });
 // Product.Specs = Product.hasMany(Spec, { foreignKey: "prod_id", constraints: false });

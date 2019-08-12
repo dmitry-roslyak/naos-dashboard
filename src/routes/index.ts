@@ -14,14 +14,14 @@ router.use(function (req, res, next) {
     res.locals.appName = "Naos dashboard";
     res.locals.errors = [];
     res.locals.server = { url: process.env.NAOS_URL, status: 500 }
-    res.locals.authentication = !!req.signedCookies.api_token;
-    process.env.NODE_ENV !== 'production' && (res.locals.authentication = true);
+    res.locals.authentication = req.signedCookies.api_token && req.signedCookies.api_token !== "false";
+    // process.env.NODE_ENV !== 'production' && (res.locals.authentication = true);
     next();
 });
 router.post("/token", function (req, res, next) {
     api_tokenVerify(req.body.token, req, res).then(function () {
         res.redirect('/');
-    }).catch((error: Error) => next(error))
+    }).catch((error: Error) => res.redirect('/'))
 });
 router.get("/", function (req, res, next) {
     statusCheck().then(status => {
