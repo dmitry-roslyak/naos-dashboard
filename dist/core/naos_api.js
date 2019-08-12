@@ -13,8 +13,8 @@ function api_tokenVerify(api_token, req, res) {
         url: "/api/user",
         qs: { api_token }
     })
-        .catch(() => res.cookie('api_token', "false", { signed: true, sameSite: true }))
-        .then(() => res.cookie('api_token', api_token, { expires: new Date(24 * 60 * 60 * 1000 + Date.now()), signed: true, sameSite: true }));
+        .then(() => res.cookie('api_token', api_token, { expires: new Date(24 * 60 * 60 * 1000 + Date.now()), signed: true, sameSite: true }))
+        .catch(() => res.cookie('api_token', "false", { signed: true, sameSite: true }));
 }
 exports.api_tokenVerify = api_tokenVerify;
 function statusCheck() {
