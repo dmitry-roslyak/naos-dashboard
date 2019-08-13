@@ -40,41 +40,29 @@ const controller = {
             });
         });
     },
-    updateOrCreate: function (req: Request, res: Response, next: NextFunction) {
+    updateOrCreate: async function (req: Request, res: Response, next: NextFunction) {
         let fields = req.body;
-        let imageUploadPromise = req.file && imageUpload(req)
+        let imageName = req.file && await imageUpload(req).catch(err => res.status(400).send(err.message))
 
         Object.keys(fields).forEach(name => name == "specs" || Array.isArray(fields[name]) && (fields[name] = fields[name][0]));
+        if (imageName) fields.img_src = imageName
         fields.Specs = Object.values(fields.specs)
         fields.Specs = fields.Specs.filter((element: any) => element.value.length > 0);
-        // console.log(fields)
-        if (imageUploadPromise) {
-            imageUploadPromise.then(function (fileName: string) {
-                fields.img_src = fileName;
-                console.log(fileName);
-                updateOrCreate();
-            }).catch(function (error) {
-                res.status(500).send(error.message);
-            })
-        } else updateOrCreate();
 
-        function updateOrCreate() {
-            Product.createOrUpdateWithSpecs(fields).then((result) => {
-                // console.log(result)
-                setTimeout(() => {
-                    if (fields.id) {
-                        console.log(`Product (id: ${fields.id}) updated`);
-                        res.redirect(".");
-                    } else {
-                        console.log(`Product created`);
-                        res.redirect("/product/" + result[0].id);
-                    }
-                }, 50);
-            }).catch(err => {
-                console.error(err)
-                res.status(400).send(err.message);
-            });
-        }
+        Product.createOrUpdateWithSpecs(fields).then((result) => {
+            setTimeout(() => {
+                if (fields.id) {
+                    console.log(`Product (id: ${fields.id}) updated`);
+                    res.redirect(".");
+                } else {
+                    console.log(`Product created`);
+                    res.redirect("/product/" + result[0].id);
+                }
+            }, 50);
+        }).catch(err => {
+            console.error(err)
+            res.status(400).send(err.message);
+        });
     },
 
     find: function (req: Request, res: Response, next: NextFunction) {
