@@ -21,14 +21,11 @@ router.use(function (req, res, next) {
 router.post("/token", function (req, res, next) {
     api_tokenVerify(req.body.token, req, res).then(function () {
         res.redirect('/');
-    }).catch((error: Error) => res.redirect('/'))
+    })
 });
 router.get("/", function (req, res, next) {
     statusCheck().then(status => {
         res.locals.server.status = status;
-        res.render("index", { title: res.locals.appName });
-    }).catch(err => {
-        res.locals.errors.push(err.message);
         res.render("index", { title: res.locals.appName });
     })
 });

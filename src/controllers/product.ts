@@ -42,7 +42,12 @@ const controller = {
     },
     updateOrCreate: async function (req: Request, res: Response, next: NextFunction) {
         let fields = req.body;
-        let imageName = req.file && await imageUpload(req).catch(err => res.status(400).send(err.message))
+        let error: any;
+        let imageName = req.file && await imageUpload(req).catch(err => error = err)
+        if (error) {
+            res.status(400).send(error.message)
+            return
+        }
 
         Object.keys(fields).forEach(name => name == "specs" || Array.isArray(fields[name]) && (fields[name] = fields[name][0]));
         if (imageName) fields.img_src = imageName

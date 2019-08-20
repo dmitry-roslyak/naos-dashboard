@@ -49,7 +49,12 @@ const controller = {
     updateOrCreate: function (req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             let fields = req.body;
-            let imageName = req.file && (yield naos_api_1.imageUpload(req).catch(err => res.status(400).send(err.message)));
+            let error;
+            let imageName = req.file && (yield naos_api_1.imageUpload(req).catch(err => error = err));
+            if (error) {
+                res.status(400).send(error.message);
+                return;
+            }
             Object.keys(fields).forEach(name => name == "specs" || Array.isArray(fields[name]) && (fields[name] = fields[name][0]));
             if (imageName)
                 fields.img_src = imageName;
