@@ -19,12 +19,12 @@ function api_tokenVerify(api_token: string, req: Request, res: Response) {
 
 }
 function statusCheck() {
-    return new Promise((resolve, reject) => {
-        request.head("/", function (error, httpResponse, body) {
-            error && reject(error)
-            httpResponse && resolve(httpResponse.statusCode)
-        })
+    return request.head({
+        url: "/",
+        resolveWithFullResponse: true
     })
+        .then(httpResponse => Promise.resolve(httpResponse.statusCode))
+        .catch(error => Promise.resolve(error.statusCode ? error.statusCode : 500))
 }
 function imageUpload(r: Request) {
     let formData = {
@@ -36,11 +36,12 @@ function imageUpload(r: Request) {
         },
         api_token: r.signedCookies.api_token || process.env.NODE_ENV !== 'production' && process.env.NAOS_API_TOKEN
     };
-    return request.post({
+    let pr = request.post({
         url: "/api/image_upload",
         formData: formData
     })
-        .finally(() => unlinkSync(r.file.path))
+    pr.catch(error => console.error(error)).finally(() => unlinkSync(r.file.path))
+    return pr
 }
 
 export { imageUpload, api_tokenVerify, statusCheck }
