@@ -9,7 +9,6 @@ const uuidv4 = require('uuid/v4');
 const index_1 = require("./routes/index");
 const admin_1 = require("./routes/admin");
 // var usersRouter = require("./routes/users");
-require("./core/config-init");
 var app = express();
 // view engine setup
 app.set("views", path.join(__dirname, "../views"));

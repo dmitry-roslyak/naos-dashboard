@@ -1,7 +1,21 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
-const config_init_1 = require("./config-init");
+let sequelizeDefaultOptions = {
+    "define": {
+        "underscored": true,
+        "timestamps": true
+    },
+    "logging": false
+};
+if (process.env.SSL_ENABLED) {
+    sequelizeDefaultOptions["dialectOptions"] = {
+        "ssl": true
+    };
+}
+if (!process.env.DATABASE_URL)
+    throw "DATABASE_URL is undefined";
+const sequelize = new sequelize_1.Sequelize(process.env.DATABASE_URL, sequelizeDefaultOptions);
 class Spec extends sequelize_1.Model {
 }
 exports.Spec = Spec;
@@ -19,7 +33,7 @@ class Discount extends sequelize_1.Model {
 exports.Discount = Discount;
 class Product extends sequelize_1.Model {
     static createOrUpdateWithSpecs(fields) {
-        return config_init_1.default.transaction(t => {
+        return sequelize.transaction(t => {
             let array = [];
             if (fields.id) {
                 Product.findByPk(fields.id, {
@@ -50,10 +64,10 @@ Spec.init({
     category: { type: sequelize_1.DataTypes.STRING, defaultValue: "basic" },
     isComparable: { type: sequelize_1.DataTypes.BOOLEAN, defaultValue: false, field: "isComparable" },
     isFilterable: { type: sequelize_1.DataTypes.BOOLEAN, defaultValue: false, field: "isFilterable" }
-}, { sequelize: config_init_1.default });
+}, { sequelize });
 Category.init({
     name: sequelize_1.DataTypes.STRING
-}, { sequelize: config_init_1.default });
+}, { sequelize });
 Order.init({
     id: { type: sequelize_1.DataTypes.INTEGER, primaryKey: true },
     name: sequelize_1.DataTypes.STRING,
@@ -65,7 +79,7 @@ Order.init({
     order_state: sequelize_1.DataTypes.STRING,
     created_at: sequelize_1.DataTypes.DATE,
     updated_at: sequelize_1.DataTypes.DATE
-}, { sequelize: config_init_1.default });
+}, { sequelize });
 User.init({
     id: { type: sequelize_1.DataTypes.INTEGER, primaryKey: true },
     name: sequelize_1.DataTypes.STRING,
@@ -73,13 +87,13 @@ User.init({
     language: sequelize_1.DataTypes.STRING,
     created_at: sequelize_1.DataTypes.DATE,
     updated_at: sequelize_1.DataTypes.DATE
-}, { sequelize: config_init_1.default });
+}, { sequelize });
 Discount.init({
     promo_code: sequelize_1.DataTypes.STRING,
     discount: sequelize_1.DataTypes.INTEGER,
     begin_at: sequelize_1.DataTypes.DATE,
     end_at: sequelize_1.DataTypes.DATE
-}, { sequelize: config_init_1.default });
+}, { sequelize });
 Product.init({
     category_id: { type: sequelize_1.DataTypes.INTEGER },
     discount_id: { type: sequelize_1.DataTypes.INTEGER },
@@ -95,7 +109,7 @@ Product.init({
     arrive_date: sequelize_1.DataTypes.DATE,
     created_at: sequelize_1.DataTypes.DATE,
     updated_at: sequelize_1.DataTypes.DATE
-}, { sequelize: config_init_1.default });
+}, { sequelize });
 Product.belongsTo(Discount);
 Product.hasMany(Spec, { foreignKey: "prod_id", constraints: false });
 exports.default = { Product, Discount, User, Order, Category, Spec };

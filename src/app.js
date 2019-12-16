@@ -9,7 +9,6 @@ import indexRouter from "./routes/index";
 import adminRouter from "./routes/admin";
 
 // var usersRouter = require("./routes/users");
-require("./core/config-init");
 
 var app = express();
 // view engine setup

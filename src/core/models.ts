@@ -1,5 +1,21 @@
 import { Sequelize, Model, DataTypes, BuildOptions } from 'sequelize';
-import sequelize from './config-init';
+
+let sequelizeDefaultOptions: any = {
+    "define": {
+        "underscored": true,
+        "timestamps": true
+    },
+    "logging": false
+}
+
+if (process.env.SSL_ENABLED) {
+    sequelizeDefaultOptions["dialectOptions"] = {
+        "ssl": true
+    }
+}
+
+if (!process.env.DATABASE_URL) throw "DATABASE_URL is undefined";
+const sequelize = new Sequelize(process.env.DATABASE_URL, sequelizeDefaultOptions)
 
 class Spec extends Model {
     name: string;

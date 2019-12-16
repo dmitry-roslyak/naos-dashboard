@@ -1,6 +1,7 @@
 config.json
 /.vscode
 /uploads
+*.env
 
 # Logs
 logs

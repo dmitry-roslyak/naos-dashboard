@@ -3,15 +3,16 @@
     "version": "0.0.0",
     "private": true,
     "scripts": {
-        "start": "cross-env NODE_ENV=production node ./bin/www",
-        "prod": "tsc && cross-env NODE_ENV=production node ./bin/www",
+        "start": "node ./bin/www",
+        "dev": "env-cmd -f ./local.env node ./bin/www",
+        "debug": "env-cmd -f ./local.env node --inspect-brk ./bin/www",
         "watch": "tsc -w"
     },
     "dependencies": {
         "axios": "^0.18.0",
         "cookie-parser": "~1.4.3",
-        "cross-env": "^5.2.0",
         "debug": "~2.6.9",
+        "env-cmd": "^10.0.1",
         "express": "~4.16.0",
         "http-errors": "~1.6.2",
         "lodash": "^4.17.11",
