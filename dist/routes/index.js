@@ -35,21 +35,21 @@ router.all("*offset=:offset&limit=:limit", function (req, res, next) {
     res.locals.limit = +req.params.limit || +req.body.limit || 30;
     next();
 });
-router.get("/categories", category_1.categoriesController.show);
-router.get("/category/:id", category_1.categoriesController.showOne);
-router.get("/discounts", discount_1.discountController.show);
-router.get("/discount/:id", discount_1.discountController.showOne);
-router.get("/orders(/*)?", order_1.orderController.findAll);
+router.get("/categories", category_1.default.show);
+router.get("/category/:id", category_1.default.showOne);
+router.get("/discounts", discount_1.default.show);
+router.get("/discount/:id", discount_1.default.showOne);
+router.get("/orders(/*)?", order_1.default.findAll);
 router.get("/users(/*)?", 
 // "/users/?(offset=:offset&limit=:limit)?",
 // productController.paginator,
-user_1.userController.findAll);
+user_1.default.findAll);
 router.all("/products/?(input=:input)?(&|*)?", 
 // "/products/?(input=:input)?&?(offset=:offset&limit=:limit)?",
 // productController.paginator,
-product_1.productController.find);
-router.get("/product/:id", product_1.productController.showOne);
-router.get("/productCreate", product_1.productController.create);
+product_1.default.find);
+router.get("/product/:id", product_1.default.showOne);
+router.get("/productCreate", product_1.default.create);
 router.get("/delete", function (req, res, next) {
     res.render("deleteWarning", {
         item: {

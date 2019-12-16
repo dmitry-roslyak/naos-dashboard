@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { userController } from "../controllers/user";
-import { orderController } from "../controllers/order";
-import { discountController } from "../controllers/discount";
-import { productController } from "../controllers/product";
-import { categoriesController } from "../controllers/category";
+import user from "../controllers/user";
+import order from "../controllers/order";
+import discount from "../controllers/discount";
+import product from "../controllers/product";
+import category from "../controllers/category";
 import { api_tokenVerify, statusCheck } from "../core/naos_api";
 
 const router = Router();
@@ -35,31 +35,31 @@ router.all("*offset=:offset&limit=:limit", function (req, res, next) {
     next();
 });
 
-router.get("/categories", categoriesController.show);
-router.get("/category/:id", categoriesController.showOne);
+router.get("/categories", category.show);
+router.get("/category/:id", category.showOne);
 
-router.get("/discounts", discountController.show);
-router.get("/discount/:id", discountController.showOne);
+router.get("/discounts", discount.show);
+router.get("/discount/:id", discount.showOne);
 
 router.get(
     "/orders(/*)?",
-    orderController.findAll
+    order.findAll
 );
 router.get(
     "/users(/*)?",
     // "/users/?(offset=:offset&limit=:limit)?",
     // productController.paginator,
-    userController.findAll
+    user.findAll
 );
 
 router.all(
     "/products/?(input=:input)?(&|*)?",
     // "/products/?(input=:input)?&?(offset=:offset&limit=:limit)?",
     // productController.paginator,
-    productController.find
+    product.find
 );
-router.get("/product/:id", productController.showOne);
-router.get("/productCreate", productController.create);
+router.get("/product/:id", product.showOne);
+router.get("/productCreate", product.create);
 
 router.get("/delete", function (req, res, next) {
     res.render("deleteWarning", {

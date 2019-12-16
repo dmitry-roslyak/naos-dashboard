@@ -12,10 +12,10 @@ router.use(function (req, res, next) {
     console.log(res.locals.authentication && "authorized" || "401");
     res.locals.authentication ? next() : res.status(401).end();
 });
-router.post("/categoryCreate", category_1.categoriesController.createCategory);
-router.post("/discount/:id/edit", discount_1.discountController.edit);
-router.post("/discountCreate", discount_1.discountController.create);
-router.post("/productCreate", upload.single('image'), product_1.productController.updateOrCreate);
-router.post("/product/:id/edit", upload.single('image'), product_1.productController.updateOrCreate);
+router.post("/categoryCreate", category_1.default.createCategory);
+router.post("/discount/:id/edit", discount_1.default.edit);
+router.post("/discountCreate", discount_1.default.create);
+router.post("/productCreate", upload.single('image'), product_1.default.updateOrCreate);
+router.post("/product/:id/edit", upload.single('image'), product_1.default.updateOrCreate);
 exports.default = router;
 //# sourceMappingURL=admin.js.map
