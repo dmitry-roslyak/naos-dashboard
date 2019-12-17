@@ -26,9 +26,9 @@ function statusCheck() {
         .then(httpResponse => Promise.resolve(httpResponse.statusCode))
         .catch(error => Promise.resolve(error.statusCode ? error.statusCode : 500))
 }
-function imageUpload(r: Request) {
+function fileUpload(r: Request, url?: string) {
     let formData = {
-        image: {
+        file: {
             value: createReadStream(r.file.path),
             options: {
                 filename: r.file.originalname
@@ -37,11 +37,11 @@ function imageUpload(r: Request) {
         api_token: r.signedCookies.api_token || process.env.NODE_ENV !== 'production' && process.env.NAOS_API_TOKEN
     };
     let pr = request.post({
-        url: "/api/image_upload",
+        url: url ? url : "/api/image_upload",
         formData: formData
     })
     pr.catch(error => console.error(error)).finally(() => unlinkSync(r.file.path))
     return pr
 }
 
-export { imageUpload, api_tokenVerify, statusCheck }
+export { fileUpload, api_tokenVerify, statusCheck }

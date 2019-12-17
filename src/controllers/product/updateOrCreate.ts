@@ -1,5 +1,5 @@
 import { Product } from "../../core/models";
-import { imageUpload } from "../../core/naos_api";
+import { fileUpload as imageUpload } from "../../core/naos_api";
 import { RequestHandler } from "express-serve-static-core";
 
 export const updateOrCreate: RequestHandler = async function (req, res) {

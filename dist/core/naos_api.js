@@ -26,9 +26,9 @@ function statusCheck() {
         .catch(error => Promise.resolve(error.statusCode ? error.statusCode : 500));
 }
 exports.statusCheck = statusCheck;
-function imageUpload(r) {
+function fileUpload(r, url) {
     let formData = {
-        image: {
+        file: {
             value: fs_1.createReadStream(r.file.path),
             options: {
                 filename: r.file.originalname
@@ -37,11 +37,11 @@ function imageUpload(r) {
         api_token: r.signedCookies.api_token || process.env.NODE_ENV !== 'production' && process.env.NAOS_API_TOKEN
     };
     let pr = request.post({
-        url: "/api/image_upload",
+        url: url ? url : "/api/image_upload",
         formData: formData
     });
     pr.catch(error => console.error(error)).finally(() => fs_1.unlinkSync(r.file.path));
     return pr;
 }
-exports.imageUpload = imageUpload;
+exports.fileUpload = fileUpload;
 //# sourceMappingURL=naos_api.js.map
