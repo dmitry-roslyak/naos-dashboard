@@ -3,7 +3,6 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
-const uuidv4 = require('uuid/v4');
 
 import indexRouter from "./routes/index";
 import adminRouter from "./routes/admin";
@@ -18,7 +17,7 @@ app.set("view engine", "pug");
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser(uuidv4()));
+app.use(cookieParser(process.env.APP_KEY));
 app.use(express.static(path.join(__dirname, "../public")));
 
 app.use("/", indexRouter, adminRouter);
