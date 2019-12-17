@@ -3,7 +3,7 @@ import { Sequelize, Model, DataTypes, BuildOptions } from 'sequelize';
 let sequelizeDefaultOptions: any = {
     "define": {
         "underscored": true,
-        "timestamps": true
+        "timestamps": false
     },
     "logging": false
 }

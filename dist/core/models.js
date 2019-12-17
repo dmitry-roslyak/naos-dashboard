@@ -4,7 +4,7 @@ const sequelize_1 = require("sequelize");
 let sequelizeDefaultOptions = {
     "define": {
         "underscored": true,
-        "timestamps": true
+        "timestamps": false
     },
     "logging": false
 };
