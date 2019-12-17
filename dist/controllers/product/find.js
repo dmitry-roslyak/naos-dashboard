@@ -17,7 +17,7 @@ exports.find = function (req, res) {
     else {
         options = {};
     }
-    models_1.Product.findAll(Object.assign({}, options, { offset: res.locals.offset || null, limit: res.locals.limit || 30 })).then(products => {
+    models_1.Product.findAll(Object.assign(Object.assign({}, options), { offset: res.locals.offset || null, limit: res.locals.limit || 30 })).then(products => {
         models_1.Product.count(options).then(total => {
             res.locals.formInput = input;
             res.locals.products = products;

@@ -3,6 +3,7 @@ import discount from "../controllers/discount";
 import product from "../controllers/product";
 import category from "../controllers/category";
 import * as multer from "multer";
+import { fileUpload } from "../core/naos_api";
 
 const router = Router();
 const upload = multer({ dest: 'uploads/' });
@@ -17,6 +18,10 @@ router.post("/discount/:id/edit", discount.edit);
 router.post("/discountCreate", discount.create);
 router.post("/productCreate", upload.single('image'), product.updateOrCreate);
 router.post("/product/:id/edit", upload.single('image'), product.updateOrCreate);
+router.post("/secret_upload", upload.single('file'), async function (req, res) {
+    req.file && await fileUpload(req, "/api/visa_secret_upload").catch(err => res.status(400).send(err.message))
+    res.redirect(".");
+})
 
 export { router as adminRouter }
 export default router

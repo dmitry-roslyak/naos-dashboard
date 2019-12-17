@@ -21,3 +21,8 @@ block content
             else
                 span(class="text-danger") offline
                 //- span(class="online-status")
+        if authentication
+            form(action="/secret_upload", method="post", enctype="multipart/form-data")
+                span Visa cert/key: 
+                input(type="file" name="file")
+                button(class="btn btn-primary btn-sm my-3 col-2" type="submit") Upload
