@@ -1,5 +1,5 @@
 ## About
-Dashboard for [naos](http://naos.herokuapp.com)
+[Dashboard](https://naos-dashboard.herokuapp.com/) for [naos](http://naos.herokuapp.com)
 Learning node.js(express) + TypeScript
 
 <!-- ## Usage
