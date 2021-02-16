@@ -28,7 +28,8 @@ block content
                     td #{product.id}
                     td #{product.name}
                     td
-                        img(src=server.url+"/file/"+product.img_src)
+                        //- img(src=server.url+"/file/"+product.img_src)
+                        img(src=(product.img_src[0]==="/"?server.url+"/file/"+product.img_src:product.img_src))
                     //- td #{product.category_id}
                     //- td #{product.discount_id}
                     td #{product.description}

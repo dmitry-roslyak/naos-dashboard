@@ -11,7 +11,7 @@ block content
                         tr
                             td
                                 if product.id 
-                                    img(src=`${server.url}/file/${product.img_src}` style="height:6rem") 
+                                    img(src=(product.img_src[0]==="/"?`${server.url}/file/${product.img_src}`:product.img_src) style="height:6rem")
                             td
                                 input(type="file" name="image")
                         if product.id 
