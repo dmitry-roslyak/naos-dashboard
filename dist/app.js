@@ -5,8 +5,10 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
+require("./loaders/WebPushLoader");
 const index_1 = require("./routes/index");
 const admin_1 = require("./routes/admin");
+const webpush_1 = require("./routes/webpush");
 // var usersRouter = require("./routes/users");
 var app = express();
 // view engine setup
@@ -16,8 +18,9 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.APP_KEY));
-app.use(express.static(path.join(__dirname, "../public")));
-app.use("/", index_1.default, admin_1.default);
+app.use("/", express.static(path.join(__dirname, "../online-store-dashboard/dist/")));
+app.use("/", express.static(path.join(__dirname, "../public")));
+app.use("/", index_1.default, webpush_1.default, admin_1.default);
 // app.use("/users", usersRouter);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
