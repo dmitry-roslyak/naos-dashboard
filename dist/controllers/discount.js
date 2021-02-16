@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const models_1 = require("../core/models");
+const models_1 = require("../models");
 const show = function (req, res) {
-    models_1.Discount.findAll().then(discounts => {
+    models_1.Discount.findAll().then((discounts) => {
         res.render("discounts", { discounts: discounts, title: "Discounts" });
     });
 };
 const showOne = function (req, res) {
-    models_1.Discount.findByPk(req.params.id).then(discount => {
+    models_1.Discount.findByPk(req.params.id).then((discount) => {
         res.render("discount", { discount: discount, title: "Discount" });
     });
 };
