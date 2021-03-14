@@ -1,8 +1,12 @@
 config.json
 /.vscode
 /uploads
+/public/images
 *.env
-
+*.map
+*.json
+!package-lock.json
+!package.json
 # Logs
 logs
 *.log
