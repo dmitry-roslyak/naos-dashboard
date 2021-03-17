@@ -54,28 +54,28 @@ class Product extends Model {
   img_src: string;
   public readonly Discounts?: Discount[];
   public readonly Specs?: Spec[];
+  public readonly Links?: Link[];
   static createOrUpdateWithSpecs(fields: any) {
-    return sequelize.transaction((t) => {
-      let array: Array<Promise<any>> = [];
-
-      if (fields.id) {
-        Product.findByPk(fields.id, {
-          include: [Spec],
-        }).then((product) => {
-          product.Specs.forEach((spec) => {
-            array.push(spec.update(fields.specs[spec.name]));
-          });
-          array.push(product.update(fields));
-        });
-      } else {
-        array.push(
-          Product.create(fields, {
+    return sequelize.transaction(
+      (t): Promise<any> => {
+        if (fields.id) {
+          return Product.findByPk(fields.id, {
             include: [Spec],
-          })
-        );
+          }).then((product) => {
+            let array: Array<Promise<any>> = [];
+            product.Specs.forEach((spec) => {
+              array.push(spec.update(fields.specs[spec.name]));
+            });
+            array.push(product.update(fields));
+            return Promise.all(array);
+          });
+        } else {
+          return Product.create(fields, {
+            include: [Spec, Link],
+          });
+        }
       }
-      return Promise.all(array);
-    });
+    );
   }
 }
 
@@ -156,6 +156,9 @@ User.init(
 Discount.init(
   {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    // promo: DataTypes.STRING,
+    // user_id ?
+    // available_count: DataTypes.INTEGER,
     price: DataTypes.DECIMAL(13, 2),
     begin_at: DataTypes.DATE,
     end_at: DataTypes.DATE,
@@ -175,6 +178,9 @@ Product.init(
     vote_count: DataTypes.INTEGER,
     views_count: DataTypes.INTEGER,
     sales_count: DataTypes.INTEGER,
+    // is_published: DataTypes.BOOLEAN,
+    // allow_publish: DataTypes.BOOLEAN,
+    //or visible?
     is_visible: DataTypes.BOOLEAN,
     is_bestseller: DataTypes.BOOLEAN,
     available: DataTypes.INTEGER,
@@ -205,11 +211,27 @@ Langs.init(
   { sequelize }
 );
 
+export class Link extends Model {
+  id: number;
+  content_id: string;
+  url: string;
+}
+
+Link.init(
+  {
+    product_id: { type: DataTypes.INTEGER },
+    content_id: DataTypes.STRING,
+    url: DataTypes.STRING,
+  },
+  { sequelize }
+);
+
 UserWishes.belongsTo(Product);
 UserWishes.belongsTo(User);
 Product.hasOne(Discount);
 Product.hasMany(Spec, { foreignKey: "prod_id", constraints: false });
 Product.hasMany(ProductHistory);
+Product.hasMany(Link);
 // Product.Specs = Product.hasMany(Spec, { foreignKey: "prod_id", constraints: false });
 User.hasMany(UserPushSubscription);
 

@@ -3,6 +3,8 @@ extends layout
 block content
     div(class="index")
         p(style="text-align: center;") Welcome to #{title}
+        div
+            <a href="/vue">Vue.js dashboard</a>
         span Permissions: 
         if authentication
             span(class="text-success") create, read, update, delete

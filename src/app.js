@@ -6,7 +6,9 @@ var logger = require("morgan");
 require("./loaders/WebPushLoader");
 
 import indexRouter from "./routes/index";
-import adminRouter from "./routes/admin";
+import productRouter from "./routes/product";
+import discountRouter from "./routes/dicsount";
+import categoryRouter from "./routes/category";
 import webpushRouter from "./routes/webpush";
 
 // var usersRouter = require("./routes/users");
@@ -23,7 +25,8 @@ app.use(cookieParser(process.env.APP_KEY));
 app.use("/", express.static(path.join(__dirname, "../online-store-dashboard/dist/")));
 app.use("/", express.static(path.join(__dirname, "../public")));
 
-app.use("/", indexRouter, webpushRouter, adminRouter);
+// app.use("/", indexRouter);
+app.use("/", indexRouter, productRouter, discountRouter, categoryRouter, webpushRouter);
 // app.use("/users", usersRouter);
 
 // catch 404 and forward to error handler

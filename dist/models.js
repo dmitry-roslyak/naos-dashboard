@@ -29,23 +29,23 @@ exports.Discount = Discount;
 class Product extends sequelize_1.Model {
     static createOrUpdateWithSpecs(fields) {
         return sequelize_2.sequelize.transaction((t) => {
-            let array = [];
             if (fields.id) {
-                Product.findByPk(fields.id, {
+                return Product.findByPk(fields.id, {
                     include: [Spec],
                 }).then((product) => {
+                    let array = [];
                     product.Specs.forEach((spec) => {
                         array.push(spec.update(fields.specs[spec.name]));
                     });
                     array.push(product.update(fields));
+                    return Promise.all(array);
                 });
             }
             else {
-                array.push(Product.create(fields, {
-                    include: [Spec],
-                }));
+                return Product.create(fields, {
+                    include: [Spec, Link],
+                });
             }
-            return Promise.all(array);
         });
     }
 }
@@ -103,6 +103,9 @@ User.init({
 }, { sequelize: sequelize_2.sequelize });
 Discount.init({
     id: { type: sequelize_1.DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    // promo: DataTypes.STRING,
+    // user_id ?
+    // available_count: DataTypes.INTEGER,
     price: sequelize_1.DataTypes.DECIMAL(13, 2),
     begin_at: sequelize_1.DataTypes.DATE,
     end_at: sequelize_1.DataTypes.DATE,
@@ -118,6 +121,9 @@ Product.init({
     vote_count: sequelize_1.DataTypes.INTEGER,
     views_count: sequelize_1.DataTypes.INTEGER,
     sales_count: sequelize_1.DataTypes.INTEGER,
+    // is_published: DataTypes.BOOLEAN,
+    // allow_publish: DataTypes.BOOLEAN,
+    //or visible?
     is_visible: sequelize_1.DataTypes.BOOLEAN,
     is_bestseller: sequelize_1.DataTypes.BOOLEAN,
     available: sequelize_1.DataTypes.INTEGER,
@@ -137,11 +143,20 @@ Langs.init({
     key: sequelize_1.DataTypes.STRING,
     text: sequelize_1.DataTypes.TEXT,
 }, { sequelize: sequelize_2.sequelize });
+class Link extends sequelize_1.Model {
+}
+exports.Link = Link;
+Link.init({
+    product_id: { type: sequelize_1.DataTypes.INTEGER },
+    content_id: sequelize_1.DataTypes.STRING,
+    url: sequelize_1.DataTypes.STRING,
+}, { sequelize: sequelize_2.sequelize });
 UserWishes.belongsTo(Product);
 UserWishes.belongsTo(User);
 Product.hasOne(Discount);
 Product.hasMany(Spec, { foreignKey: "prod_id", constraints: false });
 Product.hasMany(ProductHistory);
+Product.hasMany(Link);
 // Product.Specs = Product.hasMany(Spec, { foreignKey: "prod_id", constraints: false });
 User.hasMany(UserPushSubscription);
 //# sourceMappingURL=models.js.map

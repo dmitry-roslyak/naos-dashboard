@@ -1,16 +1,8 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const _ = require("lodash");
 const sequelize_1 = require("sequelize");
+const sequelize_2 = require("../loaders/sequelize");
 const models_1 = require("../models");
 class ProductService {
     static search(input, offset, limit) {
@@ -31,29 +23,17 @@ class ProductService {
         }
         return Promise.all([
             models_1.Product.findAll(Object.assign(Object.assign({}, options), { offset,
-                limit, include: [models_1.ProductHistory], order: [
+                limit, include: [models_1.ProductHistory, models_1.Link], order: [
                     ["id", "ASC"],
                     [models_1.ProductHistory, "date", "DESC"],
                 ] })),
             models_1.Product.count(options),
         ]);
     }
-    //update create, then remove
-    static createV1old() {
-        return models_1.Product.build({
-            name: "Test",
-            price: 101.93,
-            rating: 0,
-            vote_count: 0,
-            is_visible: true,
-            available: 10,
-        });
-    }
     static showOne(id) {
         let p0 = [];
         p0.push(models_1.Product.findByPk(id, {
-            include: [models_1.Discount, models_1.Spec],
-            raw: true,
+            include: [models_1.Discount, models_1.Spec, models_1.Link],
         }));
         p0.push(models_1.Discount.findAll());
         p0.push(models_1.Category.findAll());
@@ -74,13 +54,37 @@ class ProductService {
             };
         });
     }
-    static updateOrCreate(fields, fileName) {
-        return __awaiter(this, void 0, void 0, function* () {
-            Object.keys(fields).forEach((name) => name == "specs" || (Array.isArray(fields[name]) && (fields[name] = fields[name][0])));
-            fields.Specs = Object.values(fields.specs);
-            fields.Specs = fields.Specs.filter((element) => element.value.length > 0);
-            fields.img_src = (yield fileName) || "";
-            return models_1.Product.createOrUpdateWithSpecs(fields);
+    static create(fields) {
+        return models_1.Product.create(fields, {
+            include: [models_1.Link],
+        });
+    }
+    static update(fields) {
+        return Promise.all([
+            fields.id &&
+                models_1.Product.findByPk(fields.id).then((product) => {
+                    return product.update(fields);
+                }),
+            fields.Links && this.updateLink(fields.content_ids, fields.Links),
+        ]);
+    }
+    static updateLink(content_ids, links) {
+        return sequelize_2.sequelize.transaction((t) => {
+            return Promise.all([
+                models_1.Link.destroy({
+                    where: {
+                        content_ids: content_ids,
+                    },
+                }),
+                models_1.Link.bulkCreate(links),
+            ]);
+        });
+    }
+    static deleteLink(linkId) {
+        return models_1.Link.destroy({
+            where: {
+                id: linkId,
+            },
         });
     }
 }

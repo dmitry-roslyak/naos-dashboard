@@ -10,7 +10,7 @@ html
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   body
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="margin-bottom: 2rem">
-        a(class="navbar-brand" href="/") #{appName}
+        a(class="navbar-brand" href="/") #{title}
             span(class="text-danger") (beta)
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -21,15 +21,15 @@ html
                 <a class="nav-item nav-link" href="/users">Users</a>
                 <a class="nav-item nav-link" href="/orders">Orders</a>
                 <a class="nav-item nav-link" href="/categories">Categories</a>
-                //- <a class="nav-item nav-link" href="/products">Products</a>
+                <a class="nav-item nav-link" href="/products">Products</a>
                 <a class="nav-item nav-link" href="/discounts">Discounts</a>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Products
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="/productCreate">Create</a>
-                    <a class="dropdown-item" href="/products">View</a>
-                </li>
+                //- <li class="nav-item dropdown">
+                //-     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Products
+                //-     </a>
+                //-     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                //-     <a class="dropdown-item" href="/productCreate">Create</a>
+                //-     <a class="dropdown-item" href="/products">View</a>
+                //- </li>
                 <a class="nav-item nav-link" href="/vue">Vue</a>
             </div>
             span(class="navbar-text pull-right")
